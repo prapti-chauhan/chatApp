@@ -1,4 +1,4 @@
-// ignore_for_file: avoid_print, must_be_immutable
+// ignore_for_file: must_be_immutable
 import 'package:chats_module/packages/config_packages.dart';
 import 'package:chats_module/packages/screen_packages.dart';
 
@@ -10,13 +10,7 @@ class ChatScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        Map<String, dynamic> presenceInfoMap = {
-          "isTyping": false,
-        };
-        FocusManager.instance.primaryFocus?.unfocus();
-        FireStoreMethods().updatePresence(AppPref().userId, presenceInfoMap);
-      },
+      onTap: () => ctrl.hideKeyboard(),
       child: Scaffold(
         appBar: AppBar(
           title: GetBuilder<ChatScreenController>(builder: (context) {
@@ -49,29 +43,34 @@ class ChatScreen extends StatelessWidget {
                           : MainAxisAlignment.start,
                       children: [
                         Flexible(
-                          child: Container(
-                              margin:
-                                  const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.only(
-                                  topLeft: const Radius.circular(24),
-                                  bottomRight: ctrl.myUserName == ds["sendBy"]
-                                      ? const Radius.circular(0)
-                                      : const Radius.circular(24),
-                                  topRight: const Radius.circular(24),
-                                  bottomLeft: ctrl.myUserName == ds["sendBy"]
-                                      ? const Radius.circular(24)
-                                      : const Radius.circular(0),
+                          child: InkWell(
+                            onLongPress: () {
+                              //delete message
+                            },
+                            child: Container(
+                                margin: const EdgeInsets.symmetric(
+                                    horizontal: 16, vertical: 4),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.only(
+                                    topLeft: const Radius.circular(24),
+                                    bottomRight: ctrl.myUserName == ds["sendBy"]
+                                        ? const Radius.circular(0)
+                                        : const Radius.circular(24),
+                                    topRight: const Radius.circular(24),
+                                    bottomLeft: ctrl.myUserName == ds["sendBy"]
+                                        ? const Radius.circular(24)
+                                        : const Radius.circular(0),
+                                  ),
+                                  color: ctrl.myUserName == ds["sendBy"]
+                                      ? Colors.blue
+                                      : Colors.deepOrangeAccent,
                                 ),
-                                color: ctrl.myUserName == ds["sendBy"]
-                                    ? Colors.blue
-                                    : Colors.deepOrangeAccent,
-                              ),
-                              padding: const EdgeInsets.all(16),
-                              child: Text(
-                                ds["message"],
-                                style: const TextStyle(color: Colors.white),
-                              )),
+                                padding: const EdgeInsets.all(16),
+                                child: Text(
+                                  ds["message"],
+                                  style: const TextStyle(color: Colors.white),
+                                )),
+                          ),
                         ),
                       ],
                     );
@@ -85,25 +84,17 @@ class ChatScreen extends StatelessWidget {
                     children: [
                       Expanded(
                           child: TextField(
-                        controller: ctrl.msgController,
-                        onTap: () {
-                          Map<String, dynamic> othersUpdatedPresenceInfoMap = {
-                            "isTyping": true,
-                          };
-                          print('update$othersUpdatedPresenceInfoMap');
-                          FireStoreMethods().updatePresence(
-                              AppPref().userId, othersUpdatedPresenceInfoMap);
-                        },
-                        style: const TextStyle(color: Colors.white),
-                        decoration: InputDecoration(
-                            border: InputBorder.none,
-                            hintText: "type a message",
-                            hintStyle: TextStyle(color: Colors.white.withOpacity(0.6))),
-                      )),
+                            controller: ctrl.msgController,
+                            onTap: () => ctrl.whenTyping(),
+                            style: const TextStyle(color: Colors.white),
+                            decoration: InputDecoration(
+                                border: InputBorder.none,
+                                hintText: "type a message",
+                                hintStyle: TextStyle(
+                                    color: Colors.white.withOpacity(0.6))),
+                          )),
                       GestureDetector(
-                        onTap: () {
-                          ctrl.addMessage(true);
-                        },
+                        onTap: () =>ctrl.addMessage(true),
                         child: const Icon(
                           Icons.send,
                           color: Colors.white,

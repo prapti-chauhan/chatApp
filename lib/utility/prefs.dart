@@ -17,6 +17,10 @@ class AppPref {
 
   String get username => store.read('username') ?? '';
 
+  set name(String value) => store.write('name', value);
+
+  String get name => store.read('name') ?? '';
+
   String get userId => store.read('userId') ?? '';
 
   set userId(String value) => store.write('userId', value);

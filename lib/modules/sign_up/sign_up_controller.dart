@@ -9,6 +9,9 @@ class SignUpController extends GetxController {
   final TextEditingController emailController = TextEditingController();
   var obscureText = false;
 
+  toSignIn() {
+    Get.offAllNamed(AppRoutes.signIn);
+  }
 
   signUp(BuildContext context) async {
     final form = formStateKey.currentState!;
@@ -23,6 +26,7 @@ class SignUpController extends GetxController {
         AppPref().email = user.user!.email!;
         AppPref().userId = user.user!.uid;
         AppPref().username = username;
+        AppPref().name = nameController.text;
         Map<String, dynamic> userInfoMap = {
           "id": user.user!.uid,
           "email": emailController.text,

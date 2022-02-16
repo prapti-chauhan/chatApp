@@ -1,4 +1,4 @@
-// ignore_for_file: unnecessary_string_escapes, unrelated_type_equality_checks, avoid_print
+// ignore_for_file: unnecessary_string_escapes, unrelated_type_equality_checks
 import 'dart:async';
 
 import 'package:chats_module/packages/config_packages.dart';
@@ -92,6 +92,41 @@ class ChatScreenController extends GetxController {
     }
   }
 
+  hideKeyboard(){
+    Map<String, dynamic> presenceInfoMap = {
+      "isTyping": false,
+    };
+    FocusManager.instance.primaryFocus?.unfocus();
+    FireStoreMethods().updatePresence(AppPref().userId, presenceInfoMap);
+  }
+
+  deleteMessage(){
+    /*PopupMenuButton(itemBuilder: (BuildContext context) {
+                                return [const PopupMenuItem(child: Text('delete'))];
+                              },);
+                               showMenu(
+                                items: <PopupMenuEntry>[
+                                  PopupMenuItem(
+                                    child: Row(
+                                      children: const <Widget>[
+                                        Icon(Icons.delete),
+                                        Text("Delete"),
+                                      ],
+                                    ),
+                                  )
+                                ],
+                                context: context,
+                              );*/
+  }
+
+  whenTyping(){
+    Map<String, dynamic> othersUpdatedPresenceInfoMap = {
+      "isTyping": true,
+    };
+    FireStoreMethods().updatePresence(
+        AppPref().userId, othersUpdatedPresenceInfoMap);
+  }
+
   _init() async {
     myUserName = AppPref.instance.username;
     FireStoreMethods().getChatRoomMessages(_chatRoomId).then((value) {
@@ -105,7 +140,6 @@ class ChatScreenController extends GetxController {
         isOnline = event.docs[0]['isOnline'];
         isTyping = event.docs[0]['isTyping'];
         lastSeen = (event.docs[0]['lastSeen'] as Timestamp).toDate();
-        print('lastSeen $lastSeen');
         update();
       }));
       return null;
