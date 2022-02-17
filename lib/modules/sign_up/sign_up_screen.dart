@@ -85,17 +85,11 @@ class SignUpScreen extends StatelessWidget {
                       ctrl.signUp(context)
                   // debugPrint(email);
                   ,
-                  onPressed: () =>
-                    ctrl.signUp(context)
-                    // debugPrint(email);
-                  ,
                   text: 'Submit',
                 ),
                 const SizedBox(height: 35),
                 TextButton(
-                  onPressed: () {
-                    Get.offNamed(AppRoutes.signIn);
-                  },
+                  onPressed: () => ctrl.toSignIn(),
                   child: const Text(
                     "Already have an account? " "Login",
                     style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18),
