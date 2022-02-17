@@ -9,6 +9,9 @@ class SignUpController extends GetxController {
   final TextEditingController emailController = TextEditingController();
   var obscureText = false;
 
+  toSignIn() {
+    Get.offAllNamed(AppRoutes.signIn);
+  }
 
   signUp(BuildContext context) async {
     final form = formStateKey.currentState!;

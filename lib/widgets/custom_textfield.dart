@@ -1,9 +1,10 @@
 import 'package:chats_module/packages/config_packages.dart';
 
 class CustomTextField extends StatelessWidget {
-  final FormFieldValidator<String> validator;
+  final FormFieldValidator<String>? validator;
   final TextEditingController controller;
-  final String labelText;
+  final ValueChanged<String>? onChanged;
+  final String? labelText;
   final String hintText;
   final bool? obscureText;
   final InputBorder? enabledBorder;
@@ -11,20 +12,25 @@ class CustomTextField extends StatelessWidget {
 
   const CustomTextField(
       {Key? key,
-      required this.validator,
-      required this.controller,
-      required this.labelText,
-      required this.hintText, this.obscureText, this.enabledBorder, this.border})
+        required this.controller,
+        required this.hintText,
+        this.validator,
+        this.labelText,
+        this.obscureText,
+        this.enabledBorder,
+        this.border,
+        this.onChanged})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal:30),
+      padding: const EdgeInsets.symmetric(horizontal: 50),
       child: TextFormField(
         validator: validator,
         controller: controller,
         obscureText: obscureText ?? false,
+        onChanged: onChanged ?? (val){},
         decoration: InputDecoration(
           labelText: labelText,
           hintText: hintText,

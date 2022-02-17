@@ -63,9 +63,7 @@ class SignInScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 50),
                 TextButton(
-                  onPressed: () {
-                    Get.offNamed(AppRoutes.signUp);
-                  },
+                  onPressed: () => ctrl.toSignUp(),
                   child: const Text("Don't have an account?" "Sign Up",
                       style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18)),
                 )

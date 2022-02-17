@@ -11,6 +11,9 @@ class SignInController extends GetxController {
 
   final _auth = FirebaseAuth.instance;
 
+  toSignUp(){
+    Get.offAllNamed(AppRoutes.signUp);
+  }
   signIn(BuildContext context) async {
     UserCredential? user;
 
