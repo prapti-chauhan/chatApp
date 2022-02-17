@@ -30,7 +30,6 @@ class CustomTextField extends StatelessWidget {
         validator: validator,
         controller: controller,
         obscureText: obscureText ?? false,
-        onChanged: onChanged ?? (val){},
         decoration: InputDecoration(
           labelText: labelText,
           hintText: hintText,

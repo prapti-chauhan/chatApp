@@ -26,6 +26,7 @@ class SignUpController extends GetxController {
         AppPref().email = user.user!.email!;
         AppPref().userId = user.user!.uid;
         AppPref().username = username;
+        AppPref().name = nameController.text;
         Map<String, dynamic> userInfoMap = {
           "id": user.user!.uid,
           "email": emailController.text,

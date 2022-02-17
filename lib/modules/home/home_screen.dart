@@ -1,5 +1,3 @@
-// ignore_for_file:must_be_immutable, unnecessary_brace_in_string_interps
-
 import 'package:chats_module/packages/config_packages.dart';
 import 'package:chats_module/packages/screen_packages.dart';
 
@@ -11,73 +9,70 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => ctrl.hideKeyboard(),
+      onTap: () {
+        FocusManager.instance.primaryFocus?.unfocus();
+        ctrl.searchController.clear();
+      },
       child: Scaffold(
           appBar: AppBar(
-            centerTitle: true,
-            title: const Text("Chats"),
-          ),
-          drawer: Drawer(
-            child: ListView(
-              padding: EdgeInsets.zero,
-              children: [
-                DrawerHeader(
-                    decoration: const BoxDecoration(
-                      color: Colors.blue,
-                    ),
-                    child: Row(
-                      children: [
-                        const Icon(
-                          Icons.account_circle,
-                          size: 100,
-                          color: Colors.white,
-                        ),
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              AppPref.instance.username,
-                              style: const TextStyle(color: Colors.white),
+            title: const Text("Home"),
+            actions: [
+              InkWell(
+                onTap: () {
+                  showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: const Text('Logout'),
+                          content: const Text("Are you sure to logout?"),
+                          actions: <Widget>[
+                            ElevatedButton(
+                              child: const Text(
+                                "Yes",
+                                style: TextStyle(color: Colors.white),
+                              ),
+                              style:
+                                  ElevatedButton.styleFrom(primary: Colors.greenAccent),
+                              onPressed: () {
+                                AppPref().logout();
+                                Get.offNamed(AppRoutes.signIn);
+                              },
                             ),
-                            Text(
-                              AppPref.instance.email,
-                              style: const TextStyle(color: Colors.white),
-                            )
+                            ElevatedButton(
+                                child: const Text(
+                                  "No",
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                                style:
+                                    ElevatedButton.styleFrom(primary: Colors.redAccent),
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                })
                           ],
-                        )
-                      ],
-                    )),
-                ListTile(
-                  leading: const Icon(
-                    Icons.logout,
-                    color: Colors.blue,
-                  ),
-                  title: const Text('Logout'),
-                  onTap: () => ctrl.logoutDialog(context),
-                ),
-              ],
-            ),
-          ),
-          body: GetBuilder<HomeController>(builder: (context) {
-            return Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Column(
-                children: [
-                  Container(
-                    width: double.infinity,
-                    margin: const EdgeInsets.symmetric(vertical: 16),
+                        );
+                      });
+                },
+                child: Container(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
-                    decoration: BoxDecoration(
-                        border: Border.all(
-                            color: Colors.grey, width: 1, style: BorderStyle.solid),
-                        borderRadius: BorderRadius.circular(24)),
-                    child: TextField(
-                      controller: ctrl.searchController,
-                      decoration: const InputDecoration(
-                          border: InputBorder.none, hintText: "Search here"),
-                      onChanged: (value) {
-                        ctrl.finalUserList(value);
-                      },
+                    child: const Icon(Icons.exit_to_app)),
+              )
+            ],
+          ),
+          body: SingleChildScrollView(
+            child: GetBuilder<HomeController>(builder: (context) {
+              return Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Column(
+                  children: [
+                    Container(
+                      width: double.infinity,
+                      margin: const EdgeInsets.symmetric(vertical: 16),
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      decoration: BoxDecoration(
+                          border: Border.all(
+                              color: Colors.grey, width: 1, style: BorderStyle.solid),
+                          borderRadius: BorderRadius.circular(24)),
+                      child: search(ctrl.searchController.text),
                     ),
                   ),
                   ListView.builder(
@@ -114,4 +109,91 @@ class HomeScreen extends StatelessWidget {
           })),
     );
   }
+
+  Widget search(String controller) {
+    if (controller.isNotEmpty) {
+      return Row(
+        children: [
+          IconButton(
+              onPressed: () {
+                Get.back();
+              },
+              icon: const Icon(Icons.clear)),
+          Expanded(
+            child: TextField(
+              controller: ctrl.searchController,
+              decoration:
+                  const InputDecoration(border: InputBorder.none, hintText: "Search"),
+            ),
+          ),
+        ],
+      );
+    } else {
+      return Row(
+        children: [
+          Expanded(
+            child: TextField(
+              controller: ctrl.searchController,
+              decoration: const InputDecoration(
+                  border: InputBorder.none, hintText: "//Search (still in progress)"),
+            ),
+          ),
+          IconButton(
+              onPressed: () {
+                Get.back();
+              },
+              icon: const Icon(Icons.search))
+        ],
+      );
+    }
+  }
+/*
+  Widget searchUsersList() {
+    return StreamBuilder(
+      stream: ctrl.usersStream,
+      builder: (context, snapshot) {
+        QuerySnapshot<Map<String, dynamic>> data =
+            snapshot.data as QuerySnapshot<Map<String, dynamic>>;
+        if (snapshot.hasData) {
+          return ListView.builder(
+            itemCount: data.docs.length,
+            shrinkWrap: true,
+            itemBuilder: (context, index) {
+              DocumentSnapshot ds = data.docs[index];
+              return searchListUserTile(
+                  name: ds["name"], email: ds["email"], username: ds["username"]);
+            },
+          );
+        } else {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+      },
+    );
+  }
+
+  Widget searchListUserTile({required String name, username, email}) {
+    return GestureDetector(
+        onTap: () {
+          var chatRoomId = ctrl.getChatRoomIdByUsernames(ctrl.myUserName, username);
+          Map<String, dynamic> chatRoomInfoMap = {
+            "users": [ctrl.myUserName, username]
+          };
+          FireStoreMethods().createChatRoom(chatRoomId, chatRoomInfoMap);
+          Get.toNamed(AppRoutes.chat, arguments: {
+            'myUserName': ctrl.myUserName,
+            "otherUser": username,
+            "email": email,
+          });
+        },
+        child: Container(
+            margin: const EdgeInsets.symmetric(vertical: 8),
+            child: Row(children: [
+              const SizedBox(width: 12),
+              Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [Text(username), Text(email)])
+            ])));
+  }*/
 }
