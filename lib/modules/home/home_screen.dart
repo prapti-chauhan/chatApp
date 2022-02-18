@@ -1,5 +1,6 @@
 // ignore_for_file:must_be_immutable, unnecessary_brace_in_string_interps
 
+
 import 'package:chats_module/packages/config_packages.dart';
 import 'package:chats_module/packages/screen_packages.dart';
 
@@ -49,12 +50,32 @@ class HomeScreen extends StatelessWidget {
                     )),
                 ListTile(
                   leading: const Icon(
+                    Icons.password,
+                    color: Colors.blue,
+                  ),
+                  title: const Text('Update Password'),
+                  onTap: () {
+                    Get.to(() => ResetPassword());
+                  },
+                ),
+                ListTile(
+                    leading: const Icon(
+                      Icons.switch_account_rounded,
+                      color: Colors.blue,
+                    ),
+                    title: const Text('Update Profile'),
+                    onTap: () {
+                      Get.to(() => UpdateProfile());
+                    }),
+                ListTile(
+                  leading: const Icon(
                     Icons.logout,
                     color: Colors.blue,
                   ),
                   title: const Text('Logout'),
                   onTap: () => ctrl.logoutDialog(context),
                 ),
+
               ],
             ),
           ),

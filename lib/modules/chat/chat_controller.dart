@@ -5,15 +5,17 @@ import 'package:chats_module/packages/config_packages.dart';
 import 'package:chats_module/packages/screen_packages.dart';
 
 class ChatScreenController extends GetxController {
+
   final List<StreamSubscription> _streams = <StreamSubscription>[];
   List<QueryDocumentSnapshot> getMessages = <QueryDocumentSnapshot>[];
+
   bool isOnline = false, isTyping = false ;
-  RxBool isDelete = false.obs;
   DateTime? lastSeen;
+
+  RxBool isDelete = false.obs;
 
   String chatWithUsername = '', _email = '';
 
-  Map<String, dynamic> _arguments = {};
   String _messageId = "", _chatRoomId = '';
   String myUserName = '';
 
@@ -21,10 +23,9 @@ class ChatScreenController extends GetxController {
 
   @override
   void onInit() {
-    _arguments = Get.arguments as Map<String, dynamic>;
-    _email = _arguments['email'] ?? '';
-    chatWithUsername = _arguments['otherUser'] ?? '';
-    _chatRoomId = _arguments['chatRoomId'] ?? '';
+    _email = Get.arguments['email'] ?? '';
+    chatWithUsername = Get.arguments['otherUser'] ?? '';
+    _chatRoomId = Get.arguments['chatRoomId'] ?? '';
     _init();
     super.onInit();
   }
@@ -64,6 +65,7 @@ class ChatScreenController extends GetxController {
 
   onDeleteMsg(){
     FireStoreMethods().deleteMessage(_chatRoomId, _messageId);
+    isDelete.value = false;
   }
 
   addMessage(bool sendClicked) {

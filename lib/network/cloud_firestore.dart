@@ -2,6 +2,12 @@ import 'package:chats_module/packages/config_packages.dart';
 import 'package:chats_module/packages/screen_packages.dart';
 
 class FireStoreMethods {
+  static final FireStoreMethods instance = FireStoreMethods._pvtConstructor();
+
+  factory FireStoreMethods() => instance;
+
+  FireStoreMethods._pvtConstructor();
+
   Future addUserInfoToDB(String userId, Map<String, dynamic> userInfoMap) async {
     return FirebaseFirestore.instance.collection("users").doc(userId).set(userInfoMap);
   }
@@ -78,13 +84,7 @@ class FireStoreMethods {
         .update(lastMessageInfoMap);
   }
 
-  delete(messageId){
-    return FirebaseFirestore.instance.runTransaction((Transaction myTransaction) async {
-      await myTransaction.delete(messageId);
-    });
-  }
-
-  deleteMessage(String chatRoomId,messageId) {
+  deleteMessage(String chatRoomId, messageId) {
     return FirebaseFirestore.instance
         .collection("chatrooms")
         .doc(chatRoomId)
@@ -93,11 +93,25 @@ class FireStoreMethods {
         .delete();
   }
 
-  Future<Stream<QuerySnapshot>> getPresence(email) async {
+  Future<Stream<QuerySnapshot>> getPresence(String email) async {
     return FirebaseFirestore.instance
         .collection("users")
         .where('email', isEqualTo: email)
         .snapshots();
+  }
+
+  Future<QuerySnapshot> getProfileDetails() {
+    return FirebaseFirestore.instance
+        .collection('users')
+        .where('email', isEqualTo: AppPref.instance.email)
+        .get();
+  }
+
+  updateProfile(String userId, Map<String, dynamic> resetProfileInfoMap) {
+    return FirebaseFirestore.instance
+        .collection("users")
+        .doc(userId)
+        .update(resetProfileInfoMap);
   }
 
   updatePresence(String userId, Map<String, dynamic> updatedPresenceInfoMap) {
