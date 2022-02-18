@@ -38,8 +38,7 @@ class FireStoreMethods {
     }
   }
 
-  Future addOthersPresence(
-       Map<String, dynamic> othersCurrentPresenceInfoMap) async {
+  Future addOthersPresence(Map<String, dynamic> othersCurrentPresenceInfoMap) async {
     return FirebaseFirestore.instance
         .collection("users")
         .doc()
@@ -79,6 +78,21 @@ class FireStoreMethods {
         .update(lastMessageInfoMap);
   }
 
+  delete(messageId){
+    return FirebaseFirestore.instance.runTransaction((Transaction myTransaction) async {
+      await myTransaction.delete(messageId);
+    });
+  }
+
+  deleteMessage(String chatRoomId,messageId) {
+    return FirebaseFirestore.instance
+        .collection("chatrooms")
+        .doc(chatRoomId)
+        .collection("chats")
+        .doc(messageId)
+        .delete();
+  }
+
   Future<Stream<QuerySnapshot>> getPresence(email) async {
     return FirebaseFirestore.instance
         .collection("users")
@@ -88,7 +102,8 @@ class FireStoreMethods {
 
   updatePresence(String userId, Map<String, dynamic> updatedPresenceInfoMap) {
     return FirebaseFirestore.instance
-        .collection("users").doc(userId)
+        .collection("users")
+        .doc(userId)
         .update(updatedPresenceInfoMap);
   }
 }

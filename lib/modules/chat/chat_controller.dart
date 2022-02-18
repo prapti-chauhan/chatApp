@@ -7,7 +7,8 @@ import 'package:chats_module/packages/screen_packages.dart';
 class ChatScreenController extends GetxController {
   final List<StreamSubscription> _streams = <StreamSubscription>[];
   List<QueryDocumentSnapshot> getMessages = <QueryDocumentSnapshot>[];
-  bool isOnline = false, isTyping = false;
+  bool isOnline = false, isTyping = false ;
+  RxBool isDelete = false.obs;
   DateTime? lastSeen;
 
   String chatWithUsername = '', _email = '';
@@ -56,6 +57,15 @@ class ChatScreenController extends GetxController {
     super.onClose();
   }
 
+  onMsgLongPress(int index){
+    _messageId = getMessages[index].id;
+    isDelete.toggle();
+  }
+
+  onDeleteMsg(){
+    FireStoreMethods().deleteMessage(_chatRoomId, _messageId);
+  }
+
   addMessage(bool sendClicked) {
     if (msgController.text != "") {
       String message = msgController.text;
@@ -92,39 +102,21 @@ class ChatScreenController extends GetxController {
     }
   }
 
-  hideKeyboard(){
+  hideKeyboard() {
     Map<String, dynamic> presenceInfoMap = {
       "isTyping": false,
     };
+    isDelete.value = false;
     FocusManager.instance.primaryFocus?.unfocus();
     FireStoreMethods().updatePresence(AppPref().userId, presenceInfoMap);
   }
 
-  deleteMessage(){
-    /*PopupMenuButton(itemBuilder: (BuildContext context) {
-                                return [const PopupMenuItem(child: Text('delete'))];
-                              },);
-                               showMenu(
-                                items: <PopupMenuEntry>[
-                                  PopupMenuItem(
-                                    child: Row(
-                                      children: const <Widget>[
-                                        Icon(Icons.delete),
-                                        Text("Delete"),
-                                      ],
-                                    ),
-                                  )
-                                ],
-                                context: context,
-                              );*/
-  }
 
-  whenTyping(){
+  whenTyping() {
     Map<String, dynamic> othersUpdatedPresenceInfoMap = {
       "isTyping": true,
     };
-    FireStoreMethods().updatePresence(
-        AppPref().userId, othersUpdatedPresenceInfoMap);
+    FireStoreMethods().updatePresence(AppPref().userId, othersUpdatedPresenceInfoMap);
   }
 
   _init() async {
