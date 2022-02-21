@@ -1,6 +1,5 @@
 // ignore_for_file:must_be_immutable, unnecessary_brace_in_string_interps
 
-
 import 'package:chats_module/packages/config_packages.dart';
 import 'package:chats_module/packages/screen_packages.dart';
 
@@ -19,65 +18,81 @@ class HomeScreen extends StatelessWidget {
             title: const Text("Chats"),
           ),
           drawer: Drawer(
-            child: ListView(
-              padding: EdgeInsets.zero,
-              children: [
-                DrawerHeader(
-                    decoration: const BoxDecoration(
-                      color: Colors.blue,
-                    ),
-                    child: Row(
+            child: LayoutBuilder(builder: (context, constraints) {
+              return SingleChildScrollView(
+                child: Container(
+                  constraints: BoxConstraints(minHeight: constraints.maxHeight),
+                  child: IntrinsicHeight(
+                    child: Column(
                       children: [
-                        const Icon(
-                          Icons.account_circle,
-                          size: 100,
-                          color: Colors.white,
-                        ),
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              AppPref.instance.username,
-                              style: const TextStyle(color: Colors.white),
+                        DrawerHeader(
+                            decoration: const BoxDecoration(
+                              color: Colors.blue,
                             ),
-                            Text(
-                              AppPref.instance.email,
-                              style: const TextStyle(color: Colors.white),
-                            )
-                          ],
-                        )
+                            child: Row(
+                              children: [
+                                const Icon(
+                                  Icons.account_circle,
+                                  size: 100,
+                                  color: Colors.white,
+                                ),
+                                Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      AppPref.instance.username,
+                                      style: const TextStyle(color: Colors.white),
+                                    ),
+                                    Text(
+                                      AppPref.instance.email,
+                                      style: const TextStyle(color: Colors.white),
+                                    )
+                                  ],
+                                )
+                              ],
+                            )),
+                        ListTile(
+                          leading: const Icon(
+                            Icons.password,
+                            color: Colors.blue,
+                          ),
+                          title: const Text('Update Password'),
+                          onTap: () {
+                            Get.to(() => ResetPassword());
+                          },
+                        ),
+                        ListTile(
+                            leading: const Icon(
+                              Icons.switch_account_rounded,
+                              color: Colors.blue,
+                            ),
+                            title: const Text('Update Profile'),
+                            onTap: () {
+                              Get.to(() => UpdateProfile());
+                            }),
+                        ListTile(
+                          leading: const Icon(
+                            Icons.logout,
+                            color: Colors.blue,
+                          ),
+                          title: const Text('Logout'),
+                          onTap: () => ctrl.logoutDialog(context),
+                        ),
+                        const Spacer(),
+                        ListTile(
+                          leading: const Icon(
+                            Icons.exit_to_app,
+                            color: Colors.blue,
+                          ),
+                          title: const Text('Exit'),
+                          onTap: () => ctrl.logoutDialog(context),
+                        ),
                       ],
-                    )),
-                ListTile(
-                  leading: const Icon(
-                    Icons.password,
-                    color: Colors.blue,
-                  ),
-                  title: const Text('Update Password'),
-                  onTap: () {
-                    Get.to(() => ResetPassword());
-                  },
-                ),
-                ListTile(
-                    leading: const Icon(
-                      Icons.switch_account_rounded,
-                      color: Colors.blue,
                     ),
-                    title: const Text('Update Profile'),
-                    onTap: () {
-                      Get.to(() => UpdateProfile());
-                    }),
-                ListTile(
-                  leading: const Icon(
-                    Icons.logout,
-                    color: Colors.blue,
                   ),
-                  title: const Text('Logout'),
-                  onTap: () => ctrl.logoutDialog(context),
                 ),
-
-              ],
-            ),
+              );
+            }),
           ),
           body: GetBuilder<HomeController>(builder: (context) {
             return Padding(

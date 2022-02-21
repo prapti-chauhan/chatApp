@@ -15,9 +15,7 @@ class UpdateProfile extends StatelessWidget {
           elevation: 0,
           backgroundColor: Colors.white,
           leading: IconButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
+              onPressed: () =>Get.back(),
               icon: const Icon(
                 Icons.arrow_back_ios,
                 size: 20,

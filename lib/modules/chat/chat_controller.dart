@@ -5,18 +5,21 @@ import 'package:chats_module/packages/config_packages.dart';
 import 'package:chats_module/packages/screen_packages.dart';
 
 class ChatScreenController extends GetxController {
-
   final List<StreamSubscription> _streams = <StreamSubscription>[];
   List<QueryDocumentSnapshot> getMessages = <QueryDocumentSnapshot>[];
 
-  bool isOnline = false, isTyping = false ;
+  bool isOnline = false,
+      isTyping = false;
+
   DateTime? lastSeen;
 
   RxBool isDelete = false.obs;
 
-  String chatWithUsername = '', _email = '';
+  String chatWithUsername = '',
+      _email = '';
 
-  String _messageId = "", _chatRoomId = '';
+  String _messageId = "",
+      _chatRoomId = '';
   String myUserName = '';
 
   TextEditingController msgController = TextEditingController();
@@ -30,24 +33,44 @@ class ChatScreenController extends GetxController {
     super.onInit();
   }
 
+  String? msgTimeFormat(Timestamp time){
+
+      }
+
   String? lastSeenFormat(DateTime lastSeen) {
-    Rx<Duration> diff = DateTime.now().difference(lastSeen).obs;
+    Rx<Duration> diff = DateTime
+        .now()
+        .difference(lastSeen)
+        .obs;
     if (diff.value.inDays > 365) {
-      return "last seen ${(diff.value.inDays / 365).floor()} ${(diff.value.inDays / 365).floor() == 1 ? "year" : "years"} ago";
+      return "last seen ${(diff.value.inDays / 365).floor()} ${(diff.value.inDays / 365)
+          .floor() == 1 ? "year" : "years"} ago";
     } else if (diff.value.inDays > 30) {
-      return "last seen ${(diff.value.inDays / 30).floor()} ${(diff.value.inDays / 30).floor() == 1 ? "month" : "months"} ago";
+      return "last seen ${(diff.value.inDays / 30).floor()} ${(diff.value.inDays / 30)
+          .floor() == 1 ? "month" : "months"} ago";
     } else if (diff.value.inDays > 7) {
-      return "last seen ${(diff.value.inDays / 7).floor()} ${(diff.value.inDays / 7).floor() == 1 ? "week" : "weeks"} ago";
+      return "last seen ${(diff.value.inDays / 7).floor()} ${(diff.value.inDays / 7)
+          .floor() == 1 ? "week" : "weeks"} ago";
     } else if (diff.value.inDays > 0) {
-      return "last seen ${diff.value.inDays} ${diff.value.inDays == 1 ? "day" : "days"} ago";
+      return "last seen ${diff.value.inDays} ${diff.value.inDays == 1
+          ? "day"
+          : "days"} ago";
     } else if (diff.value.inHours > 0) {
-      return "last seen ${diff.value.inHours} ${diff.value.inHours == 1 ? "hour" : "hours"} ago";
+      return "last seen ${diff.value.inHours} ${diff.value.inHours == 1
+          ? "hour"
+          : "hours"} ago";
     } else if (diff.value.inMinutes > 0) {
-      return "last seen ${diff.value.inMinutes} ${diff.value.inMinutes == 1 ? "minute" : "minutes"} ago";
+      return "last seen ${diff.value.inMinutes} ${diff.value.inMinutes == 1
+          ? "minute"
+          : "minutes"} ago";
     } else if (diff.value.inSeconds > 0) {
-      return "last seen ${diff.value.inSeconds} ${diff.value.inSeconds == 1 ? "second" : "seconds"} ago";
+      return "last seen ${diff.value.inSeconds} ${diff.value.inSeconds == 1
+          ? "second"
+          : "seconds"} ago";
     }
-    return "last seen ${diff.value.inSeconds} ${diff.value.inSeconds == 1 ? "second" : "seconds"} ago";
+    return "last seen ${diff.value.inSeconds} ${diff.value.inSeconds == 1
+        ? "second"
+        : "seconds"} ago";
   }
 
   @override
@@ -58,13 +81,17 @@ class ChatScreenController extends GetxController {
     super.onClose();
   }
 
-  onMsgLongPress(int index){
+  onClearAll() {
+    FireStoreMethods.instance.deleteAllMessages(_chatRoomId);
+  }
+
+  onMsgLongPress(int index) {
     _messageId = getMessages[index].id;
     isDelete.toggle();
   }
 
-  onDeleteMsg(){
-    FireStoreMethods().deleteMessage(_chatRoomId, _messageId);
+  onDeleteMsg() {
+    FireStoreMethods.instance.deleteMessage(_chatRoomId, _messageId);
     isDelete.value = false;
   }
 
@@ -112,7 +139,6 @@ class ChatScreenController extends GetxController {
     FocusManager.instance.primaryFocus?.unfocus();
     FireStoreMethods().updatePresence(AppPref().userId, presenceInfoMap);
   }
-
 
   whenTyping() {
     Map<String, dynamic> othersUpdatedPresenceInfoMap = {

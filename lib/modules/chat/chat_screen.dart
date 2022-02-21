@@ -27,6 +27,15 @@ class ChatScreen extends StatelessWidget {
               ],
             );
           }),
+          actions: [
+            PopupMenuButton(
+                onSelected: ctrl.onClearAll(),
+                itemBuilder: (context) => [
+                      const PopupMenuItem(
+                        child: Text("Clear all"),
+                      ),
+                    ])
+          ],
         ),
         body: GetBuilder<ChatScreenController>(builder: (context) {
           return Column(
@@ -50,9 +59,9 @@ class ChatScreen extends StatelessWidget {
                               child: InkWell(
                                 splashColor: Colors.transparent,
                                 highlightColor: Colors.transparent,
-                                onLongPress: () =>
-                                ctrl.myUserName == ds["sendBy"] ? ctrl.onMsgLongPress(
-                                    index) : null,
+                                onLongPress: () => ctrl.myUserName == ds["sendBy"]
+                                    ? ctrl.onMsgLongPress(index)
+                                    : null,
                                 child: Container(
                                     margin: const EdgeInsets.symmetric(horizontal: 16),
                                     decoration: BoxDecoration(
@@ -70,17 +79,50 @@ class ChatScreen extends StatelessWidget {
                                           ? Colors.blue
                                           : Colors.deepOrangeAccent,
                                     ),
-                                    padding: const EdgeInsets.all(16),
-                                    child: Row(
+                                    child: Column(
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
-                                        Flexible(
-                                          child: Text(
-                                            ds["message"] ?? '',
-                                            style: const TextStyle(color: Colors.white),
-                                            softWrap: true,
-                                          ),
+                                        Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            Flexible(
+                                              child: Padding(
+                                                padding: const EdgeInsets.symmetric(
+                                                    horizontal: 12.0),
+                                                child: Text(
+                                                  ds["message"] ?? '',
+                                                  style: const TextStyle(
+                                                      color: Colors.white),
+                                                  softWrap: true,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
                                         ),
+                                        Padding(
+                                          padding:
+                                              const EdgeInsets.symmetric(horizontal: 8.0),
+                                          child: Text(
+                                              (ds['ts'] as Timestamp).toDate().toString(),
+                                              textAlign: ctrl.myUserName == ds['sendBy']
+                                                  ? TextAlign.end
+                                                  : TextAlign.start),
+                                        ),
+
+                                        /*    ctrl.myUserName == ds["sendBy"]
+                                            ? Positioned(
+                                            right: 2,
+                                            bottom: 0,
+                                            child: Text((ds['ts'] as Timestamp)
+                                                .toDate()
+                                                .toString()))
+                                            : Positioned(
+                                          left: 2,
+                                          bottom: 0,
+                                          child: Text((ds['ts'] as Timestamp)
+                                              .toDate()
+                                              .toString()),
+                                        )*/
                                       ],
                                     )),
                               ),
@@ -97,36 +139,35 @@ class ChatScreen extends StatelessWidget {
                   child: Column(
                     children: [
                       Obx(
-                            () =>
-                        (ctrl.isDelete.value)
+                        () => (ctrl.isDelete.value)
                             ? Container(
-                          width: double.infinity,
-                          color: Colors.white,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              const Text('Delete this message ? '),
-                              TextButton(
-                                  onPressed: () => ctrl.onDeleteMsg(),
-                                  child: const Text("Delete"))
-                            ],
-                          ),
-                        )
+                                width: double.infinity,
+                                color: Colors.white,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    const Text('Delete this message ? '),
+                                    TextButton(
+                                        onPressed: () => ctrl.onDeleteMsg(),
+                                        child: const Text("Delete"))
+                                  ],
+                                ),
+                              )
                             : Container(),
                       ),
                       Row(
                         children: [
                           Expanded(
                               child: TextField(
-                                controller: ctrl.msgController,
-                                onTap: () => ctrl.whenTyping(),
-                                style: const TextStyle(color: Colors.white),
-                                decoration: InputDecoration(
-                                    border: InputBorder.none,
-                                    hintText: "type a message",
-                                    hintStyle:
+                            controller: ctrl.msgController,
+                            onTap: () => ctrl.whenTyping(),
+                            style: const TextStyle(color: Colors.white),
+                            decoration: InputDecoration(
+                                border: InputBorder.none,
+                                hintText: "type a message",
+                                hintStyle:
                                     TextStyle(color: Colors.white.withOpacity(0.6))),
-                              )),
+                          )),
                           GestureDetector(
                             onTap: () => ctrl.addMessage(true),
                             child: const Icon(
@@ -146,7 +187,6 @@ class ChatScreen extends StatelessWidget {
       ),
     );
   }
-
 
   Widget checkUserPresence(bool isOnline, isTyping, DateTime lastSeen) {
     if (isOnline == true) {

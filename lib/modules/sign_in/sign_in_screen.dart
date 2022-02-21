@@ -46,11 +46,6 @@ class SignInScreen extends StatelessWidget {
                       if (value!.isEmpty) {
                         return "Please enter valid input";
                       }
-                      if (validateLoginPassword(value)) {
-                        return null;
-                      } else {
-                        return "Password must contain capital letters, \nsmall letters,\nspecial characters, \nnumbers and \n8 characters long";
-                      }
                     },
                     controller: ctrl.loginPasswordController,
                     obscureText: true,
@@ -73,11 +68,5 @@ class SignInScreen extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  bool validateLoginPassword(String value) {
-    String pattern = r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$';
-    RegExp regExp = RegExp(pattern);
-    return regExp.hasMatch(value);
   }
 }

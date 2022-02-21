@@ -93,6 +93,13 @@ class FireStoreMethods {
         .delete();
   }
 
+  deleteAllMessages(String chatRoomId) {
+    return FirebaseFirestore.instance
+        .collection('chatrooms')
+        .doc(chatRoomId)
+        .delete();
+  }
+
   Future<Stream<QuerySnapshot>> getPresence(String email) async {
     return FirebaseFirestore.instance
         .collection("users")
@@ -101,6 +108,7 @@ class FireStoreMethods {
   }
 
   Future<QuerySnapshot> getProfileDetails() {
+    print(AppPref.instance.email);
     return FirebaseFirestore.instance
         .collection('users')
         .where('email', isEqualTo: AppPref.instance.email)

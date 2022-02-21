@@ -18,9 +18,20 @@ class ResetPasswordController extends GetxController {
 
   rstButton(BuildContext context) {
     if (rstKey.currentState!.validate()) {
-      Map<String, dynamic> resetPasswordInfoMap = {'password': rstPasswordController};
-      FireStoreMethods.instance
-          .updateProfile(AppPref.instance.userId, resetPasswordInfoMap);
+      Map<String, dynamic> resetPasswordInfoMap = {
+        'password': rstPasswordController.text
+      };
+      User? firebaseUser = FirebaseAuth.instance.currentUser;
+      if (firebaseUser != null) {
+        firebaseUser.updatePassword(rstPasswordController.text).then((value) {
+          print('success');
+        }).catchError((onError) {
+          print('error');
+        });
+        FireStoreMethods.instance
+            .updateProfile(AppPref.instance.userId, resetPasswordInfoMap);
+      }
+
       Navigator.pop(context);
       debugPrint('Reset');
     }
