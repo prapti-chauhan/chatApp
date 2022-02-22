@@ -1,8 +1,7 @@
 // ignore_for_file: must_be_immutable
-import 'package:chats_module/packages/custom_packages.dart';
 import 'package:chats_module/packages/config_packages.dart';
+import 'package:chats_module/packages/custom_packages.dart';
 import 'package:chats_module/packages/screen_packages.dart';
-
 
 class SignUpScreen extends StatelessWidget {
   var ctrl = Get.put(SignUpController());
@@ -81,8 +80,7 @@ class SignUpScreen extends StatelessWidget {
                       ],
                     )),
                 CustomButton(
-                  onPressed: () =>
-                      ctrl.signUp(context)
+                  onPressed: () => ctrl.signUp(context)
                   // debugPrint(email);
                   ,
                   text: 'Submit',
@@ -102,7 +100,8 @@ class SignUpScreen extends StatelessWidget {
   }
 
   bool validatePassword(String value) {
-    String pattern = r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$';
+    String pattern =
+        r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$';
     RegExp regExp = RegExp(pattern);
     return regExp.hasMatch(value);
   }

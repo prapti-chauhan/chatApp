@@ -12,16 +12,15 @@ class CustomTextField extends StatelessWidget {
 
   const CustomTextField(
       {Key? key,
-        required this.controller,
-        required this.hintText,
-        this.validator,
-        this.labelText,
-        this.obscureText,
-        this.enabledBorder,
-        this.border,
-        this.onChanged})
+      required this.controller,
+      required this.hintText,
+      this.validator,
+      this.labelText,
+      this.obscureText,
+      this.enabledBorder,
+      this.border,
+      this.onChanged})
       : super(key: key);
-
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +30,7 @@ class CustomTextField extends StatelessWidget {
         validator: validator,
         controller: controller,
         obscureText: obscureText ?? false,
-        onChanged: onChanged ?? (val){},
+        onChanged: onChanged ?? (val) {},
         decoration: InputDecoration(
           labelText: labelText,
           hintText: hintText,
@@ -41,7 +40,8 @@ class CustomTextField extends StatelessWidget {
               color: Colors.grey,
             ),
           ),
-          border: const OutlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
+          border: const OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.grey)),
         ),
       ),
     );

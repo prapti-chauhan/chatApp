@@ -35,7 +35,8 @@ class HomeController extends GetxController {
       "lastSeen": DateTime.now(),
       "isTyping": false,
     };
-    FireStoreMethods().updatePresence(AppPref().userId, othersUpdatedPresenceInfoMap);
+    FireStoreMethods()
+        .updatePresence(AppPref().userId, othersUpdatedPresenceInfoMap);
   }
 
   _init() {
@@ -113,8 +114,8 @@ class HomeController extends GetxController {
                   Map<String, dynamic> othersUpdatedPresenceInfoMap = {
                     "isOnline": false,
                   };
-                  FireStoreMethods()
-                      .updatePresence(AppPref().userId, othersUpdatedPresenceInfoMap);
+                  FireStoreMethods().updatePresence(
+                      AppPref().userId, othersUpdatedPresenceInfoMap);
                   Get.offAllNamed(AppRoutes.signIn);
                 },
               ),
@@ -152,7 +153,8 @@ class HomeController extends GetxController {
     searchedUsers.clear();
     searchedUsers.addAll(
       getUsers.where(
-        (element) => (element['name'] as String).isCaseInsensitiveContains(text),
+        (element) =>
+            (element['name'] as String).isCaseInsensitiveContains(text),
       ),
     );
     update();

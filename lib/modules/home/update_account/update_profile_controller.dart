@@ -30,7 +30,6 @@ class UpdateProfileController extends GetxController {
         'email': rstEmailController.text,
         'username': username
       };
-      //pn sani error aave a batavu
 
       User? firebaseUser = FirebaseAuth.instance.currentUser;
 
@@ -44,7 +43,6 @@ class UpdateProfileController extends GetxController {
             .updateProfile(AppPref.instance.userId, resetProfileInfoMap);
         update();
       }
-
 
       AppPref.instance.email = rstEmailController.text;
       AppPref.instance.name = rstNameController.text;

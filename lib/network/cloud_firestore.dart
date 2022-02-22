@@ -1,3 +1,5 @@
+
+
 import 'package:chats_module/packages/config_packages.dart';
 import 'package:chats_module/packages/screen_packages.dart';
 
@@ -8,8 +10,12 @@ class FireStoreMethods {
 
   FireStoreMethods._pvtConstructor();
 
-  Future addUserInfoToDB(String userId, Map<String, dynamic> userInfoMap) async {
-    return FirebaseFirestore.instance.collection("users").doc(userId).set(userInfoMap);
+  Future addUserInfoToDB(
+      String userId, Map<String, dynamic> userInfoMap) async {
+    return FirebaseFirestore.instance
+        .collection("users")
+        .doc(userId)
+        .set(userInfoMap);
   }
 
   Future<QuerySnapshot> getUserInfo(String username) async {
@@ -28,9 +34,12 @@ class FireStoreMethods {
         .snapshots();
   }
 
-  createChatRoom(String chatRoomId, Map<String, dynamic> chatRoomInfoMap) async {
-    final snapShot =
-        await FirebaseFirestore.instance.collection("chatrooms").doc(chatRoomId).get();
+  createChatRoom(
+      String chatRoomId, Map<String, dynamic> chatRoomInfoMap) async {
+    final snapShot = await FirebaseFirestore.instance
+        .collection("chatrooms")
+        .doc(chatRoomId)
+        .get();
 
     if (snapShot.exists) {
       // chatroom already exists
@@ -44,7 +53,8 @@ class FireStoreMethods {
     }
   }
 
-  Future addOthersPresence(Map<String, dynamic> othersCurrentPresenceInfoMap) async {
+  Future addOthersPresence(
+      Map<String, dynamic> othersCurrentPresenceInfoMap) async {
     return FirebaseFirestore.instance
         .collection("users")
         .doc()
@@ -63,12 +73,12 @@ class FireStoreMethods {
         .collection("chatrooms")
         .doc(chatRoomId)
         .collection("chats")
-        .orderBy("ts", descending: true)
+        .orderBy("ts", descending:true)
         .snapshots();
   }
 
-  Future addMessage(
-      String chatRoomId, String messageId, Map<String, dynamic> messageInfoMap) async {
+  Future addMessage(String chatRoomId, String messageId,
+      Map<String, dynamic> messageInfoMap) async {
     return FirebaseFirestore.instance
         .collection("chatrooms")
         .doc(chatRoomId)
@@ -77,7 +87,8 @@ class FireStoreMethods {
         .set(messageInfoMap);
   }
 
-  updateLastMessageSend(String chatRoomId, Map<String, dynamic> lastMessageInfoMap) {
+  updateLastMessageSend(
+      String chatRoomId, Map<String, dynamic> lastMessageInfoMap) {
     return FirebaseFirestore.instance
         .collection("chatrooms")
         .doc(chatRoomId)
@@ -93,11 +104,18 @@ class FireStoreMethods {
         .delete();
   }
 
-  deleteAllMessages(String chatRoomId) {
+  deleteAllMessages(String chatRoomId,messageId) {
     return FirebaseFirestore.instance
         .collection('chatrooms')
         .doc(chatRoomId)
-        .delete();
+        .collection('chats')
+        .doc(messageId)
+        .delete()
+        .then((value) {
+      print('success');
+    }).onError((error, stackTrace) {
+      print('on clear chat error : $error');
+    });
   }
 
   Future<Stream<QuerySnapshot>> getPresence(String email) async {

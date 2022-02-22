@@ -1,5 +1,5 @@
-import 'package:chats_module/packages/custom_packages.dart';
 import 'package:chats_module/packages/config_packages.dart';
+import 'package:chats_module/packages/custom_packages.dart';
 import 'package:chats_module/packages/screen_packages.dart';
 
 class SignInScreen extends StatelessWidget {
@@ -60,7 +60,8 @@ class SignInScreen extends StatelessWidget {
                 TextButton(
                   onPressed: () => ctrl.toSignUp(),
                   child: const Text("Don't have an account?" "Sign Up",
-                      style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18)),
+                      style:
+                          TextStyle(fontWeight: FontWeight.w600, fontSize: 18)),
                 )
               ],
             ),

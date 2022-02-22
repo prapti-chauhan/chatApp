@@ -32,7 +32,7 @@ class ResetPasswordController extends GetxController {
             .updateProfile(AppPref.instance.userId, resetPasswordInfoMap);
       }
 
-      Navigator.pop(context);
+      Get.back();
       debugPrint('Reset');
     }
   }

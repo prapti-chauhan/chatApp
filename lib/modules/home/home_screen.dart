@@ -41,11 +41,13 @@ class HomeScreen extends StatelessWidget {
                                   children: [
                                     Text(
                                       AppPref.instance.username,
-                                      style: const TextStyle(color: Colors.white),
+                                      style:
+                                          const TextStyle(color: Colors.white),
                                     ),
                                     Text(
                                       AppPref.instance.email,
-                                      style: const TextStyle(color: Colors.white),
+                                      style:
+                                          const TextStyle(color: Colors.white),
                                     )
                                   ],
                                 )
@@ -105,7 +107,9 @@ class HomeScreen extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     decoration: BoxDecoration(
                         border: Border.all(
-                            color: Colors.grey, width: 1, style: BorderStyle.solid),
+                            color: Colors.grey,
+                            width: 1,
+                            style: BorderStyle.solid),
                         borderRadius: BorderRadius.circular(24)),
                     child: TextField(
                       controller: ctrl.searchController,
@@ -122,7 +126,8 @@ class HomeScreen extends StatelessWidget {
                       itemBuilder: (context, index) {
                         DocumentSnapshot _user = ctrl.searchedUsers[index];
                         return Padding(
-                          padding: const EdgeInsets.only(left: 12.0, bottom: 12.0),
+                          padding:
+                              const EdgeInsets.only(left: 12.0, bottom: 12.0),
                           child: InkWell(
                             onTap: () {
                               ctrl.forChat(_user["username"], _user["email"]);
