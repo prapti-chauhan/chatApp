@@ -27,19 +27,19 @@ class SignUpController extends GetxController {
         AppPref().userId = user.user!.uid;
         AppPref().username = username;
         AppPref().name = nameController.text;
-        Map<String, dynamic> userInfoMap = {
-          "id": user.user!.uid,
-          "email": emailController.text,
-          "username": username,
-          "name": nameController.text,
-          "password": passwordController.text,
-          "isOnline": isDeviceConnected,
-          "lastSeen": DateTime.now(),
-          "isTyping": false,
-        };
+
+        var userDetails = Users(
+            id: user.user!.uid,
+            email: emailController.text,
+            username: username,
+            name: nameController.text,
+            password: passwordController.text,
+            isOnline: isDeviceConnected,
+            lastSeen: DateTime.now(),
+            isTyping: false);
 
         FireStoreMethods()
-            .addUserInfoToDB(user.user!.uid, userInfoMap)
+            .addUserInfoToDB(user.user!.uid, userDetails.toMap())
             .then((value) => Get.offNamed(AppRoutes.home));
 
         passwordController.clear();

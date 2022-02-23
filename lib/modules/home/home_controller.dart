@@ -30,13 +30,9 @@ class HomeController extends GetxController {
   }
 
   forUpdateUser() {
-    Map<String, dynamic> othersUpdatedPresenceInfoMap = {
-      "isOnline": isDeviceConnected,
-      "lastSeen": DateTime.now(),
-      "isTyping": false,
-    };
-    FireStoreMethods()
-        .updatePresence(AppPref().userId, othersUpdatedPresenceInfoMap);
+    var presence = Users(
+        isOnline: isDeviceConnected, lastSeen: DateTime.now(), isTyping: false);
+    FireStoreMethods().updatePresence(AppPref().userId, presence.toMap());
   }
 
   _init() {
@@ -111,11 +107,8 @@ class HomeController extends GetxController {
                 style: ElevatedButton.styleFrom(primary: Colors.greenAccent),
                 onPressed: () {
                   AppPref().logout();
-                  Map<String, dynamic> othersUpdatedPresenceInfoMap = {
-                    "isOnline": false,
-                  };
-                  FireStoreMethods().updatePresence(
-                      AppPref().userId, othersUpdatedPresenceInfoMap);
+                  var isOnline = Users(isOnline: false);
+                  FireStoreMethods().updatePresence(AppPref().userId, isOnline.toMap());
                   Get.offAllNamed(AppRoutes.signIn);
                 },
               ),

@@ -25,22 +25,19 @@ class UpdateProfileController extends GetxController {
   rstProfile() {
     var username = rstEmailController.text.replaceAll('@gmail.com', '');
     if (rstFormStateKey.currentState!.validate()) {
-      Map<String, dynamic> resetProfileInfoMap = {
-        'name': rstNameController.text,
-        'email': rstEmailController.text,
-        'username': username
-      };
+      var profileDetails = Users(
+          name: rstNameController.text,
+          email: rstEmailController.text,
+          username: username);
 
       User? firebaseUser = FirebaseAuth.instance.currentUser;
 
       if (firebaseUser != null) {
         firebaseUser.updateEmail(rstEmailController.text).then((value) {
-          print('success');
         }).catchError((onError) {
-          print('error -${onError}');
         });
         FireStoreMethods.instance
-            .updateProfile(AppPref.instance.userId, resetProfileInfoMap);
+            .updateProfile(AppPref.instance.userId, profileDetails.toMap());
         update();
       }
 

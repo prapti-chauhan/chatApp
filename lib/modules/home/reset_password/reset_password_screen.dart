@@ -92,6 +92,7 @@ class ResetPassword extends StatelessWidget {
                           if (value != ctrl.rstPasswordController.text) {
                             return "Password doesn't matches!";
                           }
+                          return null;
                         },
                       ),
                       ElevatedButton(

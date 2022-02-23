@@ -25,42 +25,35 @@ class SplashController extends GetxController with WidgetsBindingObserver {
     switch (state) {
       case AppLifecycleState.inactive:
         isDeviceConnected = false;
-        Map<String, dynamic> updatedPresenceInfoMap = {
-          'isOnline': isDeviceConnected,
-          "lastSeen": DateTime.now(),
-        };
+        var presence =
+            Users(isOnline: isDeviceConnected, lastSeen: DateTime.now());
         FireStoreMethods()
-            .updatePresence(AppPref.instance.userId, updatedPresenceInfoMap);
+            .updatePresence(AppPref.instance.userId, presence.toMap());
         print('appLifeCycleState inactive');
         break;
       case AppLifecycleState.resumed:
         isDeviceConnected = true;
-        Map<String, dynamic> updatedPresenceInfoMap = {
-          'isOnline': isDeviceConnected,
-          "lastSeen": DateTime.now(),
-        };
+        var presence =
+        Users(isOnline: isDeviceConnected, lastSeen: DateTime.now());
 
         FireStoreMethods()
-            .updatePresence(AppPref.instance.userId, updatedPresenceInfoMap);
+            .updatePresence(AppPref.instance.userId, presence.toMap());
         print('appLifeCycleState resumed');
         break;
       case AppLifecycleState.paused:
         isDeviceConnected = false;
-        Map<String, dynamic> updatedPresenceInfoMap = {
-          'isOnline': isDeviceConnected,
-        };
+        var presence =
+        Users(isOnline: isDeviceConnected);
         FireStoreMethods()
-            .updatePresence(AppPref.instance.userId, updatedPresenceInfoMap);
+            .updatePresence(AppPref.instance.userId, presence.toMap());
         print('appLifeCycleState paused');
         break;
       case AppLifecycleState.detached:
         isDeviceConnected = false;
-        Map<String, dynamic> updatedPresenceInfoMap = {
-          'isOnline': isDeviceConnected,
-          "lastSeen": DateTime.now(),
-        };
+        var presence =
+        Users(isOnline: isDeviceConnected, lastSeen: DateTime.now());
         FireStoreMethods()
-            .updatePresence(AppPref.instance.userId, updatedPresenceInfoMap);
+            .updatePresence(AppPref.instance.userId, presence.toMap());
         print('appLifeCycleState detached');
         break;
     }

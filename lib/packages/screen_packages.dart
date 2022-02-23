@@ -17,3 +17,6 @@ export 'package:chats_module/modules/splash/splash_screen.dart';
 export 'package:chats_module/network/cloud_firestore.dart';
 export 'package:chats_module/utility/global_var.dart';
 export 'package:chats_module/utility/prefs.dart';
+
+export 'package:chats_module/model/chat.dart';
+export 'package:chats_module/model/user.dart';

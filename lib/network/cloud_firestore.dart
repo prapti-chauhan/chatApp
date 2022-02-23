@@ -1,5 +1,3 @@
-
-
 import 'package:chats_module/packages/config_packages.dart';
 import 'package:chats_module/packages/screen_packages.dart';
 
@@ -18,12 +16,6 @@ class FireStoreMethods {
         .set(userInfoMap);
   }
 
-  Future<QuerySnapshot> getUserInfo(String username) async {
-    return await FirebaseFirestore.instance
-        .collection("users")
-        .where("username", isEqualTo: username)
-        .get();
-  }
 
   Future<Stream<QuerySnapshot>> getChatRooms() async {
     String userName = AppPref().username;
@@ -73,18 +65,21 @@ class FireStoreMethods {
         .collection("chatrooms")
         .doc(chatRoomId)
         .collection("chats")
-        .orderBy("ts", descending:true)
+        .orderBy("ts", descending: true)
         .snapshots();
   }
 
-  Future addMessage(String chatRoomId, String messageId,
-      Map<String, dynamic> messageInfoMap) async {
+  Future addMessage(
+    String chatRoomId,
+    String messageId,
+      Chat chat
+  ) async {
     return FirebaseFirestore.instance
         .collection("chatrooms")
         .doc(chatRoomId)
         .collection("chats")
         .doc(messageId)
-        .set(messageInfoMap);
+        .set(chat.toMap());
   }
 
   updateLastMessageSend(
@@ -104,7 +99,7 @@ class FireStoreMethods {
         .delete();
   }
 
-  deleteAllMessages(String chatRoomId,messageId) {
+  deleteAllMessages(String chatRoomId, messageId) {
     return FirebaseFirestore.instance
         .collection('chatrooms')
         .doc(chatRoomId)
@@ -112,9 +107,7 @@ class FireStoreMethods {
         .doc(messageId)
         .delete()
         .then((value) {
-      print('success');
     }).onError((error, stackTrace) {
-      print('on clear chat error : $error');
     });
   }
 
@@ -126,7 +119,6 @@ class FireStoreMethods {
   }
 
   Future<QuerySnapshot> getProfileDetails() {
-    print(AppPref.instance.email);
     return FirebaseFirestore.instance
         .collection('users')
         .where('email', isEqualTo: AppPref.instance.email)

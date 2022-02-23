@@ -46,6 +46,7 @@ class SignInScreen extends StatelessWidget {
                       if (value!.isEmpty) {
                         return "Please enter valid input";
                       }
+                      return null;
                     },
                     controller: ctrl.loginPasswordController,
                     obscureText: true,

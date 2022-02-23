@@ -31,7 +31,6 @@ class ChatScreenController extends GetxController {
     super.onInit();
   }
 
-
   String msgTimeFormat(DateTime time) {
     String formattedTime = DateFormat.jm().format(time);
     return formattedTime;
@@ -67,7 +66,8 @@ class ChatScreenController extends GetxController {
 
   onClearAll() {
     for (var i = 0; i < getMessages.length; i++) {
-      FireStoreMethods.instance.deleteAllMessages(_chatRoomId, getMessages[i].id);
+      FireStoreMethods.instance
+          .deleteAllMessages(_chatRoomId, getMessages[i].id);
     }
     update();
   }
@@ -86,11 +86,7 @@ class ChatScreenController extends GetxController {
     if (msgController.text != "") {
       String message = msgController.text;
       var lastMessageTs = DateTime.now();
-      Map<String, dynamic> messageInfoMap = {
-        "message": message,
-        "sendBy": myUserName,
-        "ts": lastMessageTs,
-      };
+      var chat = Chat(message: message, sendBy: myUserName, ts: lastMessageTs);
 
       //messageId
       if (_messageId == "") {
@@ -98,7 +94,7 @@ class ChatScreenController extends GetxController {
       }
 
       FireStoreMethods()
-          .addMessage(_chatRoomId, _messageId, messageInfoMap)
+          .addMessage(_chatRoomId, _messageId, chat)
           .then((value) {
         Map<String, dynamic> lastMessageInfoMap = {
           "lastMessage": message,
@@ -120,20 +116,16 @@ class ChatScreenController extends GetxController {
   }
 
   hideKeyboard() {
-    Map<String, dynamic> presenceInfoMap = {
-      "isTyping": false,
-    };
+    var presence = Users(isTyping: false);
     isDelete.value = false;
     FocusManager.instance.primaryFocus?.unfocus();
-    FireStoreMethods().updatePresence(AppPref().userId, presenceInfoMap);
+    FireStoreMethods().updatePresence(AppPref().userId, presence.toMap());
   }
 
   whenTyping() {
-    Map<String, dynamic> othersUpdatedPresenceInfoMap = {
-      "isTyping": true,
-    };
-    FireStoreMethods()
-        .updatePresence(AppPref().userId, othersUpdatedPresenceInfoMap);
+    var presence = Users(isTyping: true);
+
+    FireStoreMethods().updatePresence(AppPref().userId, presence.toMap());
   }
 
   _init() async {
