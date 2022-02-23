@@ -1,4 +1,3 @@
-
 class Users {
   String? email;
   String? id;
@@ -31,4 +30,13 @@ class Users {
       'isTyping': isTyping
     };
   }
+
+  Users.fromMap(Map<String, dynamic> map)
+      : isOnline = map['isOnline'],
+        isTyping = map['isTyping'],
+        username = map['username'],
+        lastSeen = map['lastSeen'],
+        password = map['password'],
+        name = map['name'],
+        email = map['email'];
 }

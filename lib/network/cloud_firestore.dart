@@ -16,16 +16,6 @@ class FireStoreMethods {
         .set(userInfoMap);
   }
 
-
-  Future<Stream<QuerySnapshot>> getChatRooms() async {
-    String userName = AppPref().username;
-    return FirebaseFirestore.instance
-        .collection("chatrooms")
-        .orderBy("lastMessageSendTs", descending: true)
-        .where("users", arrayContains: userName)
-        .snapshots();
-  }
-
   createChatRoom(
       String chatRoomId, Map<String, dynamic> chatRoomInfoMap) async {
     final snapShot = await FirebaseFirestore.instance
