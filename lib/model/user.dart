@@ -38,5 +38,7 @@ class Users {
         lastSeen = map['lastSeen'],
         password = map['password'],
         name = map['name'],
-        email = map['email'];
+        email = map['email'].map((set) {
+          return Users.fromMap(set);
+        }).toList();
 }

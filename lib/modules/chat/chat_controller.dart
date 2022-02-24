@@ -8,6 +8,7 @@ import 'package:intl/intl.dart';
 class ChatScreenController extends GetxController {
   final List<StreamSubscription> _streams = <StreamSubscription>[];
   List<QueryDocumentSnapshot> getMessages = <QueryDocumentSnapshot>[];
+  List users = [];
 
   bool isOnline = false, isTyping = false;
 
@@ -134,6 +135,11 @@ class ChatScreenController extends GetxController {
       _streams.add(value.listen((event) {
         getMessages = event.docs;
         update();
+        print(getMessages.length);
+        print(getMessages[0]['message']);
+        // users = getMessages
+        //     .map<Users>((e) => Users.fromMap(e as Map<String, dynamic>))
+        //     .toList();
       }));
     });
     FireStoreMethods().getPresence(_email).then((value) {

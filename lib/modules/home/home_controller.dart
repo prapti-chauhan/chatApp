@@ -39,7 +39,8 @@ class HomeController extends GetxController {
     FireStoreMethods().getUserByUserName().then((value) {
       _usersStream.add(value.listen((event) {
         getUsers = event.docs;
-        finalUserList(searchController.text);
+        searchedUsers = getUsers;
+        // finalUserList(searchController.text);
         update();
       }));
     });
@@ -108,7 +109,8 @@ class HomeController extends GetxController {
                 onPressed: () {
                   AppPref().logout();
                   var isOnline = Users(isOnline: false);
-                  FireStoreMethods().updatePresence(AppPref().userId, isOnline.toMap());
+                  FireStoreMethods()
+                      .updatePresence(AppPref().userId, isOnline.toMap());
                   Get.offAllNamed(AppRoutes.signIn);
                 },
               ),
