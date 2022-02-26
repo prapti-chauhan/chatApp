@@ -8,7 +8,7 @@ import 'package:intl/intl.dart';
 class ChatScreenController extends GetxController {
   final List<StreamSubscription> _streams = <StreamSubscription>[];
   List<QueryDocumentSnapshot> getMessages = <QueryDocumentSnapshot>[];
-  List users = [];
+  List<Chat> users = [];
 
   bool isOnline = false, isTyping = false;
 
@@ -87,15 +87,15 @@ class ChatScreenController extends GetxController {
     if (msgController.text != "") {
       String message = msgController.text;
       var lastMessageTs = DateTime.now();
-      var chat = Chat(message: message, sendBy: myUserName, ts: lastMessageTs);
-
       //messageId
       if (_messageId == "") {
         _messageId = randomAlphaNumeric(12);
+        Chat(messageId: _messageId);
       }
+      var chat = Chat(message: message, sendBy: myUserName, ts: lastMessageTs);
 
       FireStoreMethods()
-          .addMessage(_chatRoomId, _messageId, chat)
+          .addMessage(_chatRoomId, _messageId, chat.toMap())
           .then((value) {
         Map<String, dynamic> lastMessageInfoMap = {
           "lastMessage": message,
@@ -136,18 +136,28 @@ class ChatScreenController extends GetxController {
         getMessages = event.docs;
         update();
         print(getMessages.length);
-        print(getMessages[0]['message']);
-        // users = getMessages
-        //     .map<Users>((e) => Users.fromMap(e as Map<String, dynamic>))
-        //     .toList();
+        // unistall mari ne run kar toh bija emulator ma delete kari ne run kar
+        // print(getMessages[0]['message']);
+        if (event.docs.isNotEmpty) {
+          users = event.docs.map<Chat>((e) {
+            return Chat(
+                message: e['message'] ?? '',
+                ts: (e['ts'] as Timestamp).toDate(),
+                sendBy: e['sendBy'] ?? '',
+                messageId: _messageId);
+          }).toList();
+        }
+        print(users.length);
       }));
     });
     FireStoreMethods().getPresence(_email).then((value) {
       _streams.add(value.listen((event) {
-        isOnline = event.docs[0]['isOnline'];
-        isTyping = event.docs[0]['isTyping'];
-        lastSeen = (event.docs[0]['lastSeen'] as Timestamp).toDate();
-        update();
+        if (event.docs.isNotEmpty) {
+          isOnline = event.docs[1]['isOnline'];
+          isTyping = event.docs[0]['isTyping'];
+          lastSeen = (event.docs[0]['lastSeen'] as Timestamp).toDate();
+          update();
+        }
       }));
       return null;
     });

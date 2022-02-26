@@ -16,6 +16,13 @@ class SplashController extends GetxController with WidgetsBindingObserver {
   void onInit() {
     WidgetsBinding.instance?.addObserver(this);
     update();
+    String test = '';
+    String test1 = 'abc';
+    String? test2;
+    print(' test1 : ${test.isNullOrEmpty()}');
+    print(' test2 : ${test1.isNullOrEmpty()}');
+    print(' test3 : ${test2.isNullOrEmpty()}');
+
     super.onInit();
   }
 
@@ -34,7 +41,7 @@ class SplashController extends GetxController with WidgetsBindingObserver {
       case AppLifecycleState.resumed:
         isDeviceConnected = true;
         var presence =
-        Users(isOnline: isDeviceConnected, lastSeen: DateTime.now());
+            Users(isOnline: isDeviceConnected, lastSeen: DateTime.now());
 
         FireStoreMethods()
             .updatePresence(AppPref.instance.userId, presence.toMap());
@@ -42,8 +49,7 @@ class SplashController extends GetxController with WidgetsBindingObserver {
         break;
       case AppLifecycleState.paused:
         isDeviceConnected = false;
-        var presence =
-        Users(isOnline: isDeviceConnected);
+        var presence = Users(isOnline: isDeviceConnected);
         FireStoreMethods()
             .updatePresence(AppPref.instance.userId, presence.toMap());
         print('appLifeCycleState paused');
@@ -51,7 +57,7 @@ class SplashController extends GetxController with WidgetsBindingObserver {
       case AppLifecycleState.detached:
         isDeviceConnected = false;
         var presence =
-        Users(isOnline: isDeviceConnected, lastSeen: DateTime.now());
+            Users(isOnline: isDeviceConnected, lastSeen: DateTime.now());
         FireStoreMethods()
             .updatePresence(AppPref.instance.userId, presence.toMap());
         print('appLifeCycleState detached');
@@ -68,3 +74,5 @@ class SplashController extends GetxController with WidgetsBindingObserver {
     }
   }
 }
+
+

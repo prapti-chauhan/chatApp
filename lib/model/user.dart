@@ -31,14 +31,16 @@ class Users {
     };
   }
 
-  Users.fromMap(Map<String, dynamic> map)
-      : isOnline = map['isOnline'],
-        isTyping = map['isTyping'],
-        username = map['username'],
-        lastSeen = map['lastSeen'],
-        password = map['password'],
-        name = map['name'],
-        email = map['email'].map((set) {
-          return Users.fromMap(set);
-        }).toList();
+  factory Users.fromMap(Map<String, dynamic> map) {
+    return Users(
+      isTyping: map['isTyping'] as bool,
+      username: map['username'] as String,
+      lastSeen: map['lastSeen'] as DateTime,
+      password: map['password'] as String,
+      name: map['name'] as String,
+      email: map['email'] as String,
+      isOnline: map['isOnline'] as bool,
+    );
+  }
 }
+

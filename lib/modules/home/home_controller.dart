@@ -10,6 +10,7 @@ class HomeController extends GetxController {
   String myUserName = "";
   List<QueryDocumentSnapshot> searchedUsers = <QueryDocumentSnapshot>[];
   List<QueryDocumentSnapshot> getUsers = <QueryDocumentSnapshot>[];
+  List<Users> users = [];
 
   TextEditingController searchController = TextEditingController();
 
@@ -29,18 +30,26 @@ class HomeController extends GetxController {
     super.onClose();
   }
 
-  forUpdateUser() {
-    var presence = Users(
-        isOnline: isDeviceConnected, lastSeen: DateTime.now(), isTyping: false);
-    FireStoreMethods().updatePresence(AppPref().userId, presence.toMap());
-  }
 
   _init() {
     FireStoreMethods().getUserByUserName().then((value) {
       _usersStream.add(value.listen((event) {
         getUsers = event.docs;
-        searchedUsers = getUsers;
+        users = event.docs.map<Users>((e) {
+          return Users(
+            name: e['name'] ?? '',
+            username: e["username"] ?? '',
+          );
+        }).toList();
         // finalUserList(searchController.text);
+        //users = event.docs.map<Chat>((e) {
+        //           return Chat(
+        //             message: e['message'] ?? '',
+        //             ts: (e['ts'] as Timestamp).toDate(),
+        //             sendBy: e['sendBy'] ?? '',
+        //           );
+        //         }).toList();
+        //         print(users.length);
         update();
       }));
     });
@@ -128,18 +137,30 @@ class HomeController extends GetxController {
         });
   }
 
-  forChat(String username, email) {
-    var chatRoomId = getChatRoomIdByUsernames(myUserName, username);
+  forChat(Users users) {
+    var chatRoomId = getChatRoomIdByUsernames(myUserName, users.username ?? '');
 
     Map<String, dynamic> chatRoomInfoMap = {
-      "users": [myUserName, username],
+      "users": [myUserName, users.username ?? ''],
     };
     FireStoreMethods().createChatRoom(chatRoomId, chatRoomInfoMap);
-    forUpdateUser();
+    var presence = Users(
+      // name: users.name,
+      // email: users.email,
+      // id: users.id,
+      // password: users.password,
+      // username: users.username,
+      isOnline: isDeviceConnected,
+      lastSeen: DateTime.now(),
+      isTyping: false,
+    );
+    print('presence : $presence');
+    FireStoreMethods().updatePresence(AppPref().userId, presence.toMap());
+    // forUpdateUser();
     Get.toNamed(AppRoutes.chat, arguments: {
       'myUserName': myUserName,
-      "otherUser": username,
-      "email": email,
+      "otherUser": users.username ?? '',
+      "email": users.email ?? '',
       "chatRoomId": chatRoomId
     });
   }

@@ -36,17 +36,18 @@ class ChatScreen extends StatelessWidget {
             ),
           ],
         ),
+        // aaa badhi value nul    /// e error avve etle thay jay ahve jo have nay thay hoy
         body: GetBuilder<ChatScreenController>(builder: (context) {
           return Column(
             children: [
               Expanded(
-                  child: GroupedListView<QueryDocumentSnapshot, DateTime>(
-                      elements: ctrl.getMessages,
+                  child: GroupedListView<Chat, DateTime>(
+                      elements: ctrl.users,
                       order: GroupedListOrder.DESC,
-                      reverse: false,
+                      reverse: true,
                       floatingHeader: true,
                       useStickyGroupSeparators: true,
-                      groupHeaderBuilder: (QueryDocumentSnapshot element) {
+                      groupHeaderBuilder: (Chat element) {
                         return Container(
                           color: Colors.transparent,
                           height: 50,
@@ -65,8 +66,7 @@ class ChatScreen extends StatelessWidget {
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: Text(
-                                  DateFormat.EEEE().format(
-                                      (element['ts'] as Timestamp).toDate()),
+                                  DateFormat.EEEE().format(element.ts!),
                                   textAlign: TextAlign.center,
                                 ),
                               ),
@@ -74,21 +74,21 @@ class ChatScreen extends StatelessWidget {
                           ),
                         );
                       },
-                      groupBy: (QueryDocumentSnapshot element) {
+                      groupBy: (Chat element) {
                         return DateTime(
-                          (element['ts'] as Timestamp).toDate().day,
-                          (element['ts'] as Timestamp).toDate().weekday,
-                          (element['ts'] as Timestamp).toDate().month,
-                          (element['ts'] as Timestamp).toDate().year,
+                          element.ts!.day,
+                          element.ts!.weekday,
+                          element.ts!.month,
+                          element.ts!.year,
                         );
                       },
-                      itemBuilder: (context, DocumentSnapshot ds) {
+                      itemBuilder: (context, Chat ds) {
                         return Padding(
-                          padding: ctrl.myUserName == ds["sendBy"]
+                          padding: ctrl.myUserName == ds.sendBy
                               ? const EdgeInsets.only(left: 150.0, bottom: 8)
                               : const EdgeInsets.only(right: 150, bottom: 8),
                           child: Row(
-                            mainAxisAlignment: ctrl.myUserName == ds["sendBy"]
+                            mainAxisAlignment: ctrl.myUserName == ds.sendBy
                                 ? MainAxisAlignment.end
                                 : MainAxisAlignment.start,
                             children: [
@@ -97,8 +97,8 @@ class ChatScreen extends StatelessWidget {
                                   splashColor: Colors.transparent,
                                   highlightColor: Colors.transparent,
                                   onLongPress: () =>
-                                  ctrl.myUserName == ds["sendBy"]
-                                      ? ctrl.onMsgLongPress(ds.id)
+                                  ctrl.myUserName == ds.sendBy
+                                      ? ctrl.onMsgLongPress('')//ADD MESSAGEID
                                       : null,
                                   child: Container(
                                       padding: const EdgeInsets.only(
@@ -109,60 +109,58 @@ class ChatScreen extends StatelessWidget {
                                         borderRadius: BorderRadius.only(
                                           topLeft: const Radius.circular(24),
                                           bottomRight:
-                                          ctrl.myUserName == ds["sendBy"]
+                                          ctrl.myUserName == ds.sendBy
                                               ? const Radius.circular(0)
                                               : const Radius.circular(24),
                                           topRight: const Radius.circular(24),
                                           bottomLeft:
-                                          ctrl.myUserName == ds["sendBy"]
+                                          ctrl.myUserName == ds.sendBy
                                               ? const Radius.circular(24)
                                               : const Radius.circular(0),
                                         ),
-                                        color: ctrl.myUserName == ds["sendBy"]
+                                        color: ctrl.myUserName == ds.sendBy
                                             ? Colors.blue
                                             : Colors.deepOrangeAccent,
                                       ),
                                       child: Column(
                                         crossAxisAlignment:
-                                        ctrl.myUserName == ds['sendBy']
+                                        ctrl.myUserName == ds.sendBy
                                             ? CrossAxisAlignment.end
                                             : CrossAxisAlignment.start,
                                         children: [
-                                          Row(
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: [
-                                              Flexible(
-                                                child: Padding(
-                                                  padding:
-                                                  const EdgeInsets.only(
-                                                      bottom: 2,
-                                                      top: 8,
-                                                      left: 12,
-                                                      right: 12),
-                                                  child: Text(
-                                                    ds["message"] ?? '',
-                                                    style: const TextStyle(
-                                                        color: Colors.white),
-                                                    softWrap: true,
-                                                  ),
-                                                ),
+                                        Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Flexible(
+                                            child: Padding(
+                                              padding:
+                                              const EdgeInsets.only(
+                                                  bottom: 2,
+                                                  top: 8,
+                                                  left: 12,
+                                                  right: 12),
+                                              child: Text(
+                                                ds.message ?? '',
+                                                style: const TextStyle(
+                                                    color: Colors.white),
+                                                softWrap: true,
                                               ),
-                                            ],
+                                            ),
                                           ),
-                                          Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                horizontal: 7.0),
-                                            child: Text(
-                                                ctrl
-                                                    .msgTimeFormat(
-                                                    (ds['ts'] as Timestamp)
-                                                        .toDate())
-                                                    .toString(),
-                                                textAlign: ctrl.myUserName ==
-                                                    ds['sendBy']
-                                                    ? TextAlign.end
-                                                    : TextAlign.start),
-                                          ),
+                                        ],
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 7.0),
+                                        child: Text(
+                                          ctrl
+                                              .msgTimeFormat(
+                                              ds.ts!),
+                                              textAlign: ctrl.myUserName ==
+                                                  ds.sendBy
+                                                  ? TextAlign.end
+                                                  : TextAlign.start),
+                                        ),
                                         ],
                                       )),
                                 ),
@@ -178,7 +176,8 @@ class ChatScreen extends StatelessWidget {
                   child: Column(
                     children: [
                       Obx(
-                            () => (ctrl.isDelete.value)
+                            () =>
+                        (ctrl.isDelete.value)
                             ? Container(
                           width: double.infinity,
                           color: Colors.white,

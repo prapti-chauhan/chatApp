@@ -20,3 +20,4 @@ export 'package:chats_module/utility/prefs.dart';
 
 export 'package:chats_module/model/chat.dart';
 export 'package:chats_module/model/user.dart';
+export 'package:chats_module/utility/extensions.dart';

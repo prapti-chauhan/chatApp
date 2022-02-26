@@ -121,16 +121,16 @@ class HomeScreen extends StatelessWidget {
                     ),
                   ),
                   ListView.builder(
-                      itemCount: ctrl.searchedUsers.length,
+                      itemCount: ctrl.users.length,
                       shrinkWrap: true,
                       itemBuilder: (context, index) {
-                        DocumentSnapshot _user = ctrl.searchedUsers[index];
+                        Users _user = ctrl.users[index];
                         return Padding(
                           padding:
                               const EdgeInsets.only(left: 12.0, bottom: 12.0),
                           child: InkWell(
                             onTap: () {
-                              ctrl.forChat(_user["username"], _user["email"]);
+                              ctrl.forChat(_user);
                             },
                             child: SizedBox(
                               width: double.infinity,
@@ -138,11 +138,11 @@ class HomeScreen extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    _user["name"],
+                                    'name : ${_user.name}',
                                     style: const TextStyle(fontSize: 16),
                                   ),
                                   const SizedBox(height: 3),
-                                  Text(_user["username"])
+                                  Text('username : ${_user.username}')
                                 ],
                               ),
                             ),

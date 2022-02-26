@@ -41,6 +41,7 @@ class SignUpController extends GetxController {
         FireStoreMethods()
             .addUserInfoToDB(user.user!.uid, userDetails.toMap())
             .then((value) => Get.offNamed(AppRoutes.home));
+        print(userDetails.toMap());
 
         passwordController.clear();
         emailController.clear();

@@ -59,17 +59,13 @@ class FireStoreMethods {
         .snapshots();
   }
 
-  Future addMessage(
-    String chatRoomId,
-    String messageId,
-      Chat chat
-  ) async {
+  Future addMessage(String chatRoomId, String messageId,  Map<String, dynamic> msgInfoMap) async {
     return FirebaseFirestore.instance
         .collection("chatrooms")
         .doc(chatRoomId)
         .collection("chats")
         .doc(messageId)
-        .set(chat.toMap());
+        .set(msgInfoMap);
   }
 
   updateLastMessageSend(
@@ -96,9 +92,8 @@ class FireStoreMethods {
         .collection('chats')
         .doc(messageId)
         .delete()
-        .then((value) {
-    }).onError((error, stackTrace) {
-    });
+        .then((value) {})
+        .onError((error, stackTrace) {});
   }
 
   Future<Stream<QuerySnapshot>> getPresence(String email) async {
