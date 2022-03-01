@@ -42,7 +42,7 @@ class ChatScreen extends StatelessWidget {
             children: [
               Expanded(
                   child: GroupedListView<Chat, DateTime>(
-                      elements: ctrl.users,
+                      elements: ctrl.chatList,
                       order: GroupedListOrder.DESC,
                       reverse: true,
                       floatingHeader: true,

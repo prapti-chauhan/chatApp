@@ -4,6 +4,8 @@ import 'package:chats_module/packages/config_packages.dart';
 import 'package:chats_module/packages/screen_packages.dart';
 
 class SplashController extends GetxController with WidgetsBindingObserver {
+  Users? users;
+
   @override
   void onReady() {
     Future.delayed(const Duration(milliseconds: 1000), () {
@@ -16,13 +18,7 @@ class SplashController extends GetxController with WidgetsBindingObserver {
   void onInit() {
     WidgetsBinding.instance?.addObserver(this);
     update();
-    String test = '';
-    String test1 = 'abc';
-    String? test2;
-    print(' test1 : ${test.isNullOrEmpty()}');
-    print(' test2 : ${test1.isNullOrEmpty()}');
-    print(' test3 : ${test2.isNullOrEmpty()}');
-
+    users;
     super.onInit();
   }
 
@@ -32,16 +28,30 @@ class SplashController extends GetxController with WidgetsBindingObserver {
     switch (state) {
       case AppLifecycleState.inactive:
         isDeviceConnected = false;
-        var presence =
-            Users(isOnline: isDeviceConnected, lastSeen: DateTime.now());
+        var presence = Users(
+            isOnline: isDeviceConnected,
+            lastSeen: users!.lastSeen,
+            isTyping: users!.isTyping,
+            name: users!.name,
+            password: users!.password,
+            id: users!.id,
+            email: users!.email,
+            username: users!.username);
         FireStoreMethods()
             .updatePresence(AppPref.instance.userId, presence.toMap());
         print('appLifeCycleState inactive');
         break;
       case AppLifecycleState.resumed:
         isDeviceConnected = true;
-        var presence =
-            Users(isOnline: isDeviceConnected, lastSeen: DateTime.now());
+        var presence = Users(
+            isOnline: isDeviceConnected,
+            lastSeen: DateTime.now(),
+            isTyping: users!.isTyping,
+            name: users!.name,
+            password: users!.password,
+            id: users!.id,
+            email: users!.email,
+            username: users!.username);
 
         FireStoreMethods()
             .updatePresence(AppPref.instance.userId, presence.toMap());
@@ -49,15 +59,30 @@ class SplashController extends GetxController with WidgetsBindingObserver {
         break;
       case AppLifecycleState.paused:
         isDeviceConnected = false;
-        var presence = Users(isOnline: isDeviceConnected);
+        var presence = Users(
+            isOnline: isDeviceConnected,
+            lastSeen: users!.lastSeen,
+            isTyping: users!.isTyping,
+            name: users!.name,
+            password: users!.password,
+            id: users!.id,
+            email: users!.email,
+            username: users!.username);
         FireStoreMethods()
             .updatePresence(AppPref.instance.userId, presence.toMap());
         print('appLifeCycleState paused');
         break;
       case AppLifecycleState.detached:
         isDeviceConnected = false;
-        var presence =
-            Users(isOnline: isDeviceConnected, lastSeen: DateTime.now());
+        var presence = Users(
+            isOnline: isDeviceConnected,
+            lastSeen: users!.lastSeen,
+            isTyping: users!.isTyping,
+            name: users!.name,
+            password: users!.password,
+            id: users!.id,
+            email: users!.email,
+            username: users!.username);
         FireStoreMethods()
             .updatePresence(AppPref.instance.userId, presence.toMap());
         print('appLifeCycleState detached');
@@ -74,5 +99,3 @@ class SplashController extends GetxController with WidgetsBindingObserver {
     }
   }
 }
-
-

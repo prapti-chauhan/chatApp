@@ -1,10 +1,10 @@
 class Chat implements Comparable {
-  String? message;
-  String? sendBy;
-  DateTime? ts;
-  String? messageId;
+  String message;
+  String sendBy;
+  DateTime ts;
+  String messageId;
 
-  Chat({this.messageId, this.message, this.sendBy, this.ts});
+  Chat({required this.messageId, required this.message, required this.sendBy, required this.ts});
 
   Map<String, dynamic> toMap() {
     return {

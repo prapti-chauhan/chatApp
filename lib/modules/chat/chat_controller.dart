@@ -8,7 +8,9 @@ import 'package:intl/intl.dart';
 class ChatScreenController extends GetxController {
   final List<StreamSubscription> _streams = <StreamSubscription>[];
   List<QueryDocumentSnapshot> getMessages = <QueryDocumentSnapshot>[];
-  List<Chat> users = [];
+  List<Chat> chatList = [];
+
+  Users? users;
 
   bool isOnline = false, isTyping = false;
 
@@ -28,6 +30,7 @@ class ChatScreenController extends GetxController {
     _email = Get.arguments['email'] ?? '';
     chatWithUsername = Get.arguments['otherUser'] ?? '';
     _chatRoomId = Get.arguments['chatRoomId'] ?? '';
+    users;
     _init();
     super.onInit();
   }
@@ -88,11 +91,13 @@ class ChatScreenController extends GetxController {
       String message = msgController.text;
       var lastMessageTs = DateTime.now();
       //messageId
-      if (_messageId == "") {
-        _messageId = randomAlphaNumeric(12);
-        Chat(messageId: _messageId);
-      }
-      var chat = Chat(message: message, sendBy: myUserName, ts: lastMessageTs);
+      _messageId = randomAlphaNumeric(12);
+
+      var chat = Chat(
+          message: message,
+          sendBy: myUserName,
+          ts: lastMessageTs,
+          messageId: _messageId);
 
       FireStoreMethods()
           .addMessage(_chatRoomId, _messageId, chat.toMap())
@@ -117,14 +122,30 @@ class ChatScreenController extends GetxController {
   }
 
   hideKeyboard() {
-    var presence = Users(isTyping: false);
+    var presence = Users(
+        isTyping: false,
+        isOnline: true,
+        name: users!.name,
+        id:users!.id,
+        email: _email,
+        lastSeen: DateTime.now(),
+        username: myUserName,
+        password: users!.password);
     isDelete.value = false;
     FocusManager.instance.primaryFocus?.unfocus();
     FireStoreMethods().updatePresence(AppPref().userId, presence.toMap());
   }
 
   whenTyping() {
-    var presence = Users(isTyping: true);
+    var presence = Users(
+        isTyping: true,
+        isOnline: true,
+        name: users!.name,
+        id: users!.id,
+        email: _email,
+        lastSeen: DateTime.now(),
+        username: myUserName,
+        password: users!.password);
 
     FireStoreMethods().updatePresence(AppPref().userId, presence.toMap());
   }
@@ -136,10 +157,10 @@ class ChatScreenController extends GetxController {
         getMessages = event.docs;
         update();
         print(getMessages.length);
-        // unistall mari ne run kar toh bija emulator ma delete kari ne run kar
+
         // print(getMessages[0]['message']);
         if (event.docs.isNotEmpty) {
-          users = event.docs.map<Chat>((e) {
+          chatList = event.docs.map<Chat>((e) {
             return Chat(
                 message: e['message'] ?? '',
                 ts: (e['ts'] as Timestamp).toDate(),
@@ -147,7 +168,7 @@ class ChatScreenController extends GetxController {
                 messageId: _messageId);
           }).toList();
         }
-        print(users.length);
+        print(chatList.length);
       }));
     });
     FireStoreMethods().getPresence(_email).then((value) {

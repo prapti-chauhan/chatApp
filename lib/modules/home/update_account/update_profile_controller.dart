@@ -6,10 +6,14 @@ class UpdateProfileController extends GetxController {
   final TextEditingController rstNameController = TextEditingController();
   final TextEditingController rstEmailController = TextEditingController();
   String password = '';
+  Users? users;
 
   @override
   void onInit() {
     super.onInit();
+    users;
+
+
     updateControl();
   }
 
@@ -25,17 +29,20 @@ class UpdateProfileController extends GetxController {
   rstProfile() {
     var username = rstEmailController.text.replaceAll('@gmail.com', '');
     if (rstFormStateKey.currentState!.validate()) {
-      var profileDetails = Users(
-          name: rstNameController.text,
+      var profileDetails = Users(id: users!.id,
           email: rstEmailController.text,
-          username: username);
+          password: password,
+          username: username,
+          name: rstNameController.text,
+          lastSeen: users!.lastSeen,
+          isOnline: users!.isOnline,
+          isTyping: users!.isTyping);
 
       User? firebaseUser = FirebaseAuth.instance.currentUser;
 
       if (firebaseUser != null) {
-        firebaseUser.updateEmail(rstEmailController.text).then((value) {
-        }).catchError((onError) {
-        });
+        firebaseUser.updateEmail(rstEmailController.text).then((value) {})
+            .catchError((onError) {});
         FireStoreMethods.instance
             .updateProfile(AppPref.instance.userId, profileDetails.toMap());
         update();

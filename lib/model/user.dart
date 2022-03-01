@@ -1,22 +1,22 @@
 class Users {
-  String? email;
-  String? id;
-  String? name;
-  String? password;
-  String? username;
-  bool? isOnline;
-  bool? isTyping;
-  DateTime? lastSeen;
+  String email;
+  String id;
+  String name;
+  String password;
+  String username;
+  bool isOnline;
+  bool isTyping;
+  DateTime lastSeen;
 
   Users(
-      {this.id,
-      this.email,
-      this.password,
-      this.username,
-      this.name,
-      this.lastSeen,
-      this.isOnline,
-      this.isTyping});
+      {required this.id,
+      required this.email,
+      required this.password,
+      required this.username,
+      required this.name,
+      required this.lastSeen,
+      required this.isOnline,
+      required this.isTyping});
 
   Map<String, dynamic> toMap() {
     return {
@@ -40,7 +40,7 @@ class Users {
       name: map['name'] as String,
       email: map['email'] as String,
       isOnline: map['isOnline'] as bool,
+      id: map['id'] as String,
     );
   }
 }
-

@@ -12,6 +12,8 @@ class HomeController extends GetxController {
   List<QueryDocumentSnapshot> getUsers = <QueryDocumentSnapshot>[];
   List<Users> users = [];
 
+  Users? user;
+
   TextEditingController searchController = TextEditingController();
 
   final List<StreamSubscription> _usersStream = <StreamSubscription>[];
@@ -30,16 +32,20 @@ class HomeController extends GetxController {
     super.onClose();
   }
 
-
   _init() {
     FireStoreMethods().getUserByUserName().then((value) {
       _usersStream.add(value.listen((event) {
         getUsers = event.docs;
         users = event.docs.map<Users>((e) {
           return Users(
-            name: e['name'] ?? '',
-            username: e["username"] ?? '',
-          );
+              name: e['name'] ?? '',
+              username: e["username"] ?? '',
+              lastSeen: e["lastSeen"],
+              isTyping: e["isTyping"],
+              isOnline: e['isOnline'],
+              id: e['id'],
+              password: e['password'],
+              email: e['email']);
         }).toList();
         // finalUserList(searchController.text);
         //users = event.docs.map<Chat>((e) {
@@ -53,6 +59,7 @@ class HomeController extends GetxController {
         update();
       }));
     });
+    user;
     myUserName = AppPref().username;
   }
 
@@ -117,7 +124,15 @@ class HomeController extends GetxController {
                 style: ElevatedButton.styleFrom(primary: Colors.greenAccent),
                 onPressed: () {
                   AppPref().logout();
-                  var isOnline = Users(isOnline: false);
+                  var isOnline = Users(
+                      isOnline: false,
+                      password: user!.password,
+                      username: user!.username,
+                      isTyping: user!.isTyping,
+                      name: user!.name,
+                      email: user!.email,
+                      id: user!.id,
+                      lastSeen: user!.lastSeen);
                   FireStoreMethods()
                       .updatePresence(AppPref().userId, isOnline.toMap());
                   Get.offAllNamed(AppRoutes.signIn);
@@ -138,29 +153,30 @@ class HomeController extends GetxController {
   }
 
   forChat(Users users) {
-    var chatRoomId = getChatRoomIdByUsernames(myUserName, users.username ?? '');
+    var chatRoomId = getChatRoomIdByUsernames(myUserName, users.username);
 
     Map<String, dynamic> chatRoomInfoMap = {
-      "users": [myUserName, users.username ?? ''],
+      "users": [myUserName, users.username],
     };
     FireStoreMethods().createChatRoom(chatRoomId, chatRoomInfoMap);
     var presence = Users(
-      // name: users.name,
-      // email: users.email,
-      // id: users.id,
-      // password: users.password,
-      // username: users.username,
+      name: myUserName,
+      email: AppPref.instance.email,
+      id: AppPref.instance.userId,
+      username: AppPref.instance.username,
+      password: users.password,
       isOnline: isDeviceConnected,
       lastSeen: DateTime.now(),
       isTyping: false,
     );
-    print('presence : $presence');
-    FireStoreMethods().updatePresence(AppPref().userId, presence.toMap());
+    print('presence : ${presence.password.toString()}');
+    FireStoreMethods()
+        .updatePresence(AppPref.instance.userId, presence.toMap());
     // forUpdateUser();
     Get.toNamed(AppRoutes.chat, arguments: {
       'myUserName': myUserName,
-      "otherUser": users.username ?? '',
-      "email": users.email ?? '',
+      "otherUser": users.username,
+      "email": users.email,
       "chatRoomId": chatRoomId
     });
   }
