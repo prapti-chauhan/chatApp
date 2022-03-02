@@ -1,8 +1,8 @@
 class Chat implements Comparable {
-  String message;
-  String sendBy;
-  DateTime ts;
-  String messageId;
+  final String message;
+  final String sendBy;
+  final DateTime ts;
+  final String messageId;
 
   Chat({required this.messageId, required this.message, required this.sendBy, required this.ts});
 
@@ -25,6 +25,6 @@ class Chat implements Comparable {
 
   @override
   int compareTo(other) {
-    return ts!.compareTo(other.ts);
+    return ts.compareTo(other.ts);
   }
 }

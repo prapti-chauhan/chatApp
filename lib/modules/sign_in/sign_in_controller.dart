@@ -28,6 +28,7 @@ class SignInController extends GetxController {
           AppPref().email = loginEmailController.text;
           AppPref().username =
               loginEmailController.text.replaceAll('@gmail.com', '');
+          AppPref.instance.password = loginPasswordController.text;
           loginEmailController.clear();
           loginPasswordController.clear();
           Get.off(() => HomeScreen());

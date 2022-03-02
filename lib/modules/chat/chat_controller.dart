@@ -10,8 +10,6 @@ class ChatScreenController extends GetxController {
   List<QueryDocumentSnapshot> getMessages = <QueryDocumentSnapshot>[];
   List<Chat> chatList = [];
 
-  Users? users;
-
   bool isOnline = false, isTyping = false;
 
   DateTime? lastSeen;
@@ -30,7 +28,6 @@ class ChatScreenController extends GetxController {
     _email = Get.arguments['email'] ?? '';
     chatWithUsername = Get.arguments['otherUser'] ?? '';
     _chatRoomId = Get.arguments['chatRoomId'] ?? '';
-    users;
     _init();
     super.onInit();
   }
@@ -124,13 +121,14 @@ class ChatScreenController extends GetxController {
   hideKeyboard() {
     var presence = Users(
         isTyping: false,
-        isOnline: true,
-        name: users!.name,
-        id:users!.id,
-        email: _email,
+        isOnline: AppPref.instance.isOnline,
+        name: AppPref.instance.name,
+        id: AppPref.instance.userId,
+        email: AppPref.instance.email,
         lastSeen: DateTime.now(),
-        username: myUserName,
-        password: users!.password);
+        username: AppPref.instance.username,
+        password: AppPref.instance.password);
+    print('psd: ${AppPref.instance.password}');
     isDelete.value = false;
     FocusManager.instance.primaryFocus?.unfocus();
     FireStoreMethods().updatePresence(AppPref().userId, presence.toMap());
@@ -140,12 +138,13 @@ class ChatScreenController extends GetxController {
     var presence = Users(
         isTyping: true,
         isOnline: true,
-        name: users!.name,
-        id: users!.id,
-        email: _email,
+        name: AppPref.instance.name,
+        id: AppPref.instance.userId,
+        email: AppPref.instance.email,
         lastSeen: DateTime.now(),
-        username: myUserName,
-        password: users!.password);
+        username: AppPref.instance.username,
+        password: AppPref.instance.password);
+    print('psds: ${AppPref.instance.password}');
 
     FireStoreMethods().updatePresence(AppPref().userId, presence.toMap());
   }
@@ -174,7 +173,7 @@ class ChatScreenController extends GetxController {
     FireStoreMethods().getPresence(_email).then((value) {
       _streams.add(value.listen((event) {
         if (event.docs.isNotEmpty) {
-          isOnline = event.docs[1]['isOnline'];
+          isOnline = event.docs[0]['isOnline'];
           isTyping = event.docs[0]['isTyping'];
           lastSeen = (event.docs[0]['lastSeen'] as Timestamp).toDate();
           update();

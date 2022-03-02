@@ -4,7 +4,6 @@ import 'package:chats_module/packages/config_packages.dart';
 import 'package:chats_module/packages/screen_packages.dart';
 
 class SplashController extends GetxController with WidgetsBindingObserver {
-  Users? users;
 
   @override
   void onReady() {
@@ -18,7 +17,6 @@ class SplashController extends GetxController with WidgetsBindingObserver {
   void onInit() {
     WidgetsBinding.instance?.addObserver(this);
     update();
-    users;
     super.onInit();
   }
 
@@ -30,13 +28,13 @@ class SplashController extends GetxController with WidgetsBindingObserver {
         isDeviceConnected = false;
         var presence = Users(
             isOnline: isDeviceConnected,
-            lastSeen: users!.lastSeen,
-            isTyping: users!.isTyping,
-            name: users!.name,
-            password: users!.password,
-            id: users!.id,
-            email: users!.email,
-            username: users!.username);
+            lastSeen: AppPref.instance.lastSeen,
+            isTyping: AppPref.instance.isTyping,
+            name: AppPref.instance.name,
+            password: AppPref.instance.password,
+            id: AppPref.instance.userId,
+            email: AppPref.instance.email,
+            username: AppPref.instance.username);
         FireStoreMethods()
             .updatePresence(AppPref.instance.userId, presence.toMap());
         print('appLifeCycleState inactive');
@@ -46,12 +44,12 @@ class SplashController extends GetxController with WidgetsBindingObserver {
         var presence = Users(
             isOnline: isDeviceConnected,
             lastSeen: DateTime.now(),
-            isTyping: users!.isTyping,
-            name: users!.name,
-            password: users!.password,
-            id: users!.id,
-            email: users!.email,
-            username: users!.username);
+            isTyping: AppPref.instance.isTyping,
+            name: AppPref.instance.name,
+            password: AppPref.instance.password,
+            id: AppPref.instance.userId,
+            email: AppPref.instance.email,
+            username: AppPref.instance.username);
 
         FireStoreMethods()
             .updatePresence(AppPref.instance.userId, presence.toMap());
@@ -61,13 +59,13 @@ class SplashController extends GetxController with WidgetsBindingObserver {
         isDeviceConnected = false;
         var presence = Users(
             isOnline: isDeviceConnected,
-            lastSeen: users!.lastSeen,
-            isTyping: users!.isTyping,
-            name: users!.name,
-            password: users!.password,
-            id: users!.id,
-            email: users!.email,
-            username: users!.username);
+            lastSeen: AppPref.instance.lastSeen,
+            isTyping: AppPref.instance.isTyping,
+            name: AppPref.instance.name,
+            password: AppPref.instance.password,
+            id: AppPref.instance.userId,
+            email: AppPref.instance.email,
+            username: AppPref.instance.username);
         FireStoreMethods()
             .updatePresence(AppPref.instance.userId, presence.toMap());
         print('appLifeCycleState paused');
@@ -76,13 +74,13 @@ class SplashController extends GetxController with WidgetsBindingObserver {
         isDeviceConnected = false;
         var presence = Users(
             isOnline: isDeviceConnected,
-            lastSeen: users!.lastSeen,
-            isTyping: users!.isTyping,
-            name: users!.name,
-            password: users!.password,
-            id: users!.id,
-            email: users!.email,
-            username: users!.username);
+            lastSeen: AppPref.instance.lastSeen,
+            isTyping: AppPref.instance.isTyping,
+            name: AppPref.instance.name,
+            password: AppPref.instance.password,
+            id: AppPref.instance.userId,
+            email: AppPref.instance.email,
+            username: AppPref.instance.username);
         FireStoreMethods()
             .updatePresence(AppPref.instance.userId, presence.toMap());
         print('appLifeCycleState detached');

@@ -66,7 +66,7 @@ class ChatScreen extends StatelessWidget {
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: Text(
-                                  DateFormat.EEEE().format(element.ts!),
+                                  DateFormat.EEEE().format(element.ts),
                                   textAlign: TextAlign.center,
                                 ),
                               ),
@@ -76,10 +76,10 @@ class ChatScreen extends StatelessWidget {
                       },
                       groupBy: (Chat element) {
                         return DateTime(
-                          element.ts!.day,
-                          element.ts!.weekday,
-                          element.ts!.month,
-                          element.ts!.year,
+                          element.ts.day,
+                          element.ts.weekday,
+                          element.ts.month,
+                          element.ts.year,
                         );
                       },
                       itemBuilder: (context, Chat ds) {
@@ -140,7 +140,7 @@ class ChatScreen extends StatelessWidget {
                                                   left: 12,
                                                   right: 12),
                                               child: Text(
-                                                ds.message ?? '',
+                                                ds.message,
                                                 style: const TextStyle(
                                                     color: Colors.white),
                                                 softWrap: true,
@@ -155,7 +155,7 @@ class ChatScreen extends StatelessWidget {
                                         child: Text(
                                           ctrl
                                               .msgTimeFormat(
-                                              ds.ts!),
+                                              ds.ts),
                                               textAlign: ctrl.myUserName ==
                                                   ds.sendBy
                                                   ? TextAlign.end

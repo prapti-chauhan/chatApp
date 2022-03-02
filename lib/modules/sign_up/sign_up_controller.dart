@@ -23,10 +23,14 @@ class SignUpController extends GetxController {
         user = (await FirebaseAuth.instance.createUserWithEmailAndPassword(
             email: emailController.text, password: passwordController.text));
 
-        AppPref().email = user.user!.email!;
-        AppPref().userId = user.user!.uid;
-        AppPref().username = username;
-        AppPref().name = nameController.text;
+        AppPref.instance.email = user.user!.email!;
+        AppPref.instance.userId = user.user!.uid;
+        AppPref.instance.username = username;
+        AppPref.instance.name = nameController.text;
+        AppPref.instance.password = passwordController.text;
+        AppPref.instance.lastSeen = DateTime.now();
+        AppPref.instance.isOnline = isDeviceConnected;
+        AppPref.instance.isTyping = false;
 
         var userDetails = Users(
             id: user.user!.uid,

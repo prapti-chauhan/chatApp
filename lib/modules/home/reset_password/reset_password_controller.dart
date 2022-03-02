@@ -7,28 +7,26 @@ class ResetPasswordController extends GetxController {
   final TextEditingController oldPasswordController = TextEditingController();
   final GlobalKey<FormState> rstKey = GlobalKey<FormState>();
   String oldPsd = '';
-  Users? users;
 
   @override
   void onInit() {
     FireStoreMethods.instance.getProfileDetails().then((value) {
       oldPsd = value.docs[0]['password'];
     });
-    users;
     super.onInit();
   }
 
   rstButton(BuildContext context) {
     if (rstKey.currentState!.validate()) {
       var password = Users(
-          id: users!.id,
-          email: users!.email,
+          id: AppPref.instance.userId,
+          email: AppPref.instance.email,
           password: rstPasswordController.text,
-          username: users!.username,
-          name: users!.name,
-          lastSeen: users!.lastSeen,
-          isOnline: users!.isOnline,
-          isTyping: users!.isTyping);
+          username: AppPref.instance.username,
+          name: AppPref.instance.name,
+          lastSeen: AppPref.instance.lastSeen,
+          isOnline: AppPref.instance.isOnline,
+          isTyping: AppPref.instance.isTyping);
       User? firebaseUser = FirebaseAuth.instance.currentUser;
       if (firebaseUser != null) {
         firebaseUser

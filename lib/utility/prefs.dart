@@ -21,6 +21,22 @@ class AppPref {
 
   String get name => store.read('name') ?? '';
 
+  set password(String value) => store.write('password', value);
+
+  String get password => store.read('password') ?? '';
+
+  set lastSeen(DateTime value) => store.write('lastSeen', value);
+
+  DateTime get lastSeen => store.read('lastSeen') ?? DateTime.now();
+
+  set isOnline(bool value) => store.write('isOnline', value);
+
+  bool get isOnline => store.read('isOnline') ?? false;
+
+  set isTyping(bool value) => store.write('isTyping', value);
+
+  bool get isTyping => store.read('isTyping') ?? false;
+
   String get userId => store.read('userId') ?? '';
 
   set userId(String value) => store.write('userId', value);

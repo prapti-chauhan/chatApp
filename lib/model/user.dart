@@ -1,12 +1,12 @@
 class Users {
-  String email;
-  String id;
-  String name;
-  String password;
-  String username;
-  bool isOnline;
-  bool isTyping;
-  DateTime lastSeen;
+  final String email;
+  final String id;
+  final String name;
+  final String password;
+  final String username;
+  final bool isOnline;
+  final bool isTyping;
+  final DateTime lastSeen;
 
   Users(
       {required this.id,
