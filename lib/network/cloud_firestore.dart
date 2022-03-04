@@ -8,20 +8,22 @@ class FireStoreMethods {
 
   FireStoreMethods._pvtConstructor();
 
-  Future addUserInfoToDB(
-      String userId, Map<String, dynamic> userInfoMap) async {
+  addUserInfoToDB(String userId, Map<String, dynamic> userInfoMap) {
     return FirebaseFirestore.instance
         .collection("users")
         .doc(userId)
         .set(userInfoMap);
   }
 
-  createChatRoom(
-      String chatRoomId, Map<String, dynamic> chatRoomInfoMap) async {
-    final snapShot = await FirebaseFirestore.instance
+  createChatRoom(String chatRoomId, Map<String, dynamic> chatRoomInfoMap) {
+    var snapShot;
+    FirebaseFirestore.instance
         .collection("chatrooms")
         .doc(chatRoomId)
-        .get();
+        .get()
+        .then((value) {
+      snapShot = value;
+    });
 
     if (snapShot.exists) {
       // chatroom already exists
@@ -35,22 +37,21 @@ class FireStoreMethods {
     }
   }
 
-  Future addOthersPresence(
-      Map<String, dynamic> othersCurrentPresenceInfoMap) async {
+  addOthersPresence(Map<String, dynamic> othersCurrentPresenceInfoMap) {
     return FirebaseFirestore.instance
         .collection("users")
         .doc()
         .set(othersCurrentPresenceInfoMap);
   }
 
-  Future<Stream<QuerySnapshot>> getUserByUserName() async {
+  Stream<QuerySnapshot> getUserByUserName() {
     return FirebaseFirestore.instance
         .collection("users")
         .where('username', isNotEqualTo: AppPref.instance.username)
         .snapshots();
   }
 
-  Future<Stream<QuerySnapshot>> getChatRoomMessages(chatRoomId) async {
+  Stream<QuerySnapshot> getChatRoomMessages(chatRoomId) {
     return FirebaseFirestore.instance
         .collection("chatrooms")
         .doc(chatRoomId)
@@ -59,7 +60,8 @@ class FireStoreMethods {
         .snapshots();
   }
 
-  Future addMessage(String chatRoomId, String messageId,  Map<String, dynamic> msgInfoMap) async {
+  addMessage(
+      String chatRoomId, String messageId, Map<String, dynamic> msgInfoMap) {
     return FirebaseFirestore.instance
         .collection("chatrooms")
         .doc(chatRoomId)
@@ -96,7 +98,7 @@ class FireStoreMethods {
         .onError((error, stackTrace) {});
   }
 
-  Future<Stream<QuerySnapshot>> getPresence(String email) async {
+  Stream<QuerySnapshot> getPresence(String email) {
     return FirebaseFirestore.instance
         .collection("users")
         .where('email', isEqualTo: email)

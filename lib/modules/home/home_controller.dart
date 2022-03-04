@@ -31,33 +31,32 @@ class HomeController extends GetxController {
   }
 
   _init() {
-    FireStoreMethods().getUserByUserName().then((value) {
-      _usersStream.add(value.listen((event) {
-        getUsers = event.docs;
-        users = event.docs.map<Users>((e) {
-          return Users(
-              name: e['name'] ?? '',
-              username: e["username"] ?? '',
-              lastSeen: (e["lastSeen"] as Timestamp).toDate(),
-              isTyping: e["isTyping"],
-              isOnline: e['isOnline'],
-              id: e['id'],
-              password: e['password'],
-              email: e['email']);
-        }).toList();
+    _usersStream.add(FireStoreMethods().getUserByUserName().listen((event) {
+      getUsers = event.docs;
+      users = event.docs.map<Users>((e) {
+        return Users(
+            name: e['name'] ?? '',
+            username: e["username"] ?? '',
+            lastSeen: (e["lastSeen"] as Timestamp).toDate(),
+            isTyping: e["isTyping"],
+            isOnline: e['isOnline'],
+            id: e['id'],
+            password: e['password'],
+            email: e['email']);
+      }).toList();
 
-        // finalUserList(searchController.text);
-        //users = event.docs.map<Chat>((e) {
-        //           return Chat(
-        //             message: e['message'] ?? '',
-        //             ts: (e['ts'] as Timestamp).toDate(),
-        //             sendBy: e['sendBy'] ?? '',
-        //           );
-        //         }).toList();
-        //         print(users.length);
-        update();
-      }));
-    });
+      // finalUserList(searchController.text);
+      //users = event.docs.map<Chat>((e) {
+      //           return Chat(
+      //             message: e['message'] ?? '',
+      //             ts: (e['ts'] as Timestamp).toDate(),
+      //             sendBy: e['sendBy'] ?? '',
+      //           );
+      //         }).toList();
+      //         print(users.length);
+      update();
+    }));
+
     myUserName = AppPref().username;
   }
 
@@ -182,8 +181,7 @@ class HomeController extends GetxController {
   finalUserList(String text) {
     searchedUsers.clear();
     searchedUsers.addAll(
-      getUsers.where
-        (
+      getUsers.where(
         (element) =>
             (element['name'] as String).isCaseInsensitiveContains(text),
       ),

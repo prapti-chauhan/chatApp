@@ -151,35 +151,32 @@ class ChatScreenController extends GetxController {
 
   _init() async {
     myUserName = AppPref.instance.username;
-    FireStoreMethods().getChatRoomMessages(_chatRoomId).then((value) {
-      _streams.add(value.listen((event) {
-        getMessages = event.docs;
-        update();
-        print(getMessages.length);
+    _streams.add(
+        FireStoreMethods().getChatRoomMessages(_chatRoomId).listen((event) {
+      getMessages = event.docs;
+      update();
+      print(getMessages.length);
 
-        // print(getMessages[0]['message']);
-        if (event.docs.isNotEmpty) {
-          chatList = event.docs.map<Chat>((e) {
-            return Chat(
-                message: e['message'] ?? '',
-                ts: (e['ts'] as Timestamp).toDate(),
-                sendBy: e['sendBy'] ?? '',
-                messageId: _messageId);
-          }).toList();
-        }
-        print(chatList.length);
-      }));
-    });
-    FireStoreMethods().getPresence(_email).then((value) {
-      _streams.add(value.listen((event) {
-        if (event.docs.isNotEmpty) {
-          isOnline = event.docs[0]['isOnline'];
-          isTyping = event.docs[0]['isTyping'];
-          lastSeen = (event.docs[0]['lastSeen'] as Timestamp).toDate();
-          update();
-        }
-      }));
-      return null;
-    });
+      // print(getMessages[0]['message']);
+      if (event.docs.isNotEmpty) {
+        chatList = event.docs.map<Chat>((e) {
+          return Chat(
+              message: e['message'] ?? '',
+              ts: (e['ts'] as Timestamp).toDate(),
+              sendBy: e['sendBy'] ?? '',
+              messageId: _messageId);
+        }).toList();
+      }
+      print(chatList.length);
+    }));
+
+    _streams.add(FireStoreMethods().getPresence(_email).listen((event) {
+      if (event.docs.isNotEmpty) {
+        isOnline = event.docs[0]['isOnline'];
+        isTyping = event.docs[0]['isTyping'];
+        lastSeen = (event.docs[0]['lastSeen'] as Timestamp).toDate();
+        update();
+      }
+    }));
   }
 }
