@@ -132,6 +132,7 @@ class HomeController extends GetxController {
                       lastSeen: AppPref.instance.lastSeen);
                   FireStoreMethods()
                       .updatePresence(AppPref().userId, isOnline.toMap());
+                  AppPref.instance.email = '';
                   Get.offAllNamed(AppRoutes.signIn);
                 },
               ),
@@ -151,6 +152,8 @@ class HomeController extends GetxController {
 
   forChat(Users users) {
     var chatRoomId = getChatRoomIdByUsernames(myUserName, users.username);
+    print(AppPref.instance.username);
+    // print(users.username);
 
     Map<String, dynamic> chatRoomInfoMap = {
       "users": [myUserName, users.username],

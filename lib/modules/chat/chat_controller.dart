@@ -164,7 +164,7 @@ class ChatScreenController extends GetxController {
               message: e['message'] ?? '',
               ts: (e['ts'] as Timestamp).toDate(),
               sendBy: e['sendBy'] ?? '',
-              messageId: _messageId);
+              messageId: e.id);
         }).toList();
       }
       print(chatList.length);

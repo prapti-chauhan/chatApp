@@ -23,18 +23,17 @@ class FireStoreMethods {
         .get()
         .then((value) {
       snapShot = value;
+      if (snapShot.exists) {
+        // chatroom already exists
+        return true;
+      } else {
+        // chatroom does not exists
+        return FirebaseFirestore.instance
+            .collection("chatrooms")
+            .doc(chatRoomId)
+            .set(chatRoomInfoMap);
+      }
     });
-
-    if (snapShot.exists) {
-      // chatroom already exists
-      return true;
-    } else {
-      // chatroom does not exists
-      return FirebaseFirestore.instance
-          .collection("chatrooms")
-          .doc(chatRoomId)
-          .set(chatRoomInfoMap);
-    }
   }
 
   addOthersPresence(Map<String, dynamic> othersCurrentPresenceInfoMap) {

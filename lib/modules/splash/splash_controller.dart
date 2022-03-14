@@ -4,7 +4,6 @@ import 'package:chats_module/packages/config_packages.dart';
 import 'package:chats_module/packages/screen_packages.dart';
 
 class SplashController extends GetxController with WidgetsBindingObserver {
-
   @override
   void onReady() {
     Future.delayed(const Duration(milliseconds: 1000), () {
@@ -16,7 +15,12 @@ class SplashController extends GetxController with WidgetsBindingObserver {
   @override
   void onInit() {
     WidgetsBinding.instance?.addObserver(this);
-    update();
+
+    // print(AppPref.instance.name);
+    // print(AppPref.instance.isOnline);
+    // print(AppPref.instance.userId);
+    // print(AppPref.instance.isTyping);
+    // print(AppPref.instance.lastSeen);
     super.onInit();
   }
 
@@ -86,6 +90,7 @@ class SplashController extends GetxController with WidgetsBindingObserver {
         print('appLifeCycleState detached');
         break;
     }
+    update();
   }
 
   checkLogin() {

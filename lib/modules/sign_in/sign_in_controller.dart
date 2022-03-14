@@ -24,11 +24,21 @@ class SignInController extends GetxController {
             email: loginEmailController.text,
             password: loginPasswordController.text);
         if (user != null) {
-          AppPref.instance.userId = user.user!.uid;
-          AppPref().email = loginEmailController.text;
-          AppPref().username =
-              loginEmailController.text.replaceAll('@gmail.com', '');
+          AppPref.instance.email = loginEmailController.text;
           AppPref.instance.password = loginPasswordController.text;
+          AppPref.instance.userId = user.user!.uid;
+
+          FireStoreMethods.instance
+              .getPresence(loginEmailController.text)
+              .listen((event) {
+            AppPref.instance.name = event.docs[0]['name'];
+            AppPref.instance.username = event.docs[0]['username'];
+            AppPref.instance.isOnline = event.docs[0]['isOnline'];
+            AppPref.instance.isTyping = event.docs[0]['isTyping'];
+            print("name ${AppPref.instance.name}");
+            print("username: ${AppPref.instance.username}");
+            update();
+          });
           loginEmailController.clear();
           loginPasswordController.clear();
           Get.off(() => HomeScreen());

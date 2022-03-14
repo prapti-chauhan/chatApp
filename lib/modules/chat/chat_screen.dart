@@ -36,7 +36,6 @@ class ChatScreen extends StatelessWidget {
             ),
           ],
         ),
-        // aaa badhi value nul    /// e error avve etle thay jay ahve jo have nay thay hoy
         body: GetBuilder<ChatScreenController>(builder: (context) {
           return Column(
             children: [
@@ -82,13 +81,13 @@ class ChatScreen extends StatelessWidget {
                           element.ts.year,
                         );
                       },
-                      itemBuilder: (context, Chat ds) {
+                      itemBuilder: (context, Chat chat) {
                         return Padding(
-                          padding: ctrl.myUserName == ds.sendBy
+                          padding: ctrl.myUserName == chat.sendBy
                               ? const EdgeInsets.only(left: 150.0, bottom: 8)
                               : const EdgeInsets.only(right: 150, bottom: 8),
                           child: Row(
-                            mainAxisAlignment: ctrl.myUserName == ds.sendBy
+                            mainAxisAlignment: ctrl.myUserName == chat.sendBy
                                 ? MainAxisAlignment.end
                                 : MainAxisAlignment.start,
                             children: [
@@ -97,9 +96,10 @@ class ChatScreen extends StatelessWidget {
                                   splashColor: Colors.transparent,
                                   highlightColor: Colors.transparent,
                                   onLongPress: () =>
-                                  ctrl.myUserName == ds.sendBy
-                                      ? ctrl.onMsgLongPress('')//ADD MESSAGEID
-                                      : null,
+                                      ctrl.myUserName == chat.sendBy
+                                          ? ctrl.onMsgLongPress(
+                                              chat.messageId) //ADD MESSAGEID
+                                          : null,
                                   child: Container(
                                       padding: const EdgeInsets.only(
                                           bottom: 1, left: 7),
@@ -109,58 +109,56 @@ class ChatScreen extends StatelessWidget {
                                         borderRadius: BorderRadius.only(
                                           topLeft: const Radius.circular(24),
                                           bottomRight:
-                                          ctrl.myUserName == ds.sendBy
-                                              ? const Radius.circular(0)
-                                              : const Radius.circular(24),
+                                              ctrl.myUserName == chat.sendBy
+                                                  ? const Radius.circular(0)
+                                                  : const Radius.circular(24),
                                           topRight: const Radius.circular(24),
                                           bottomLeft:
-                                          ctrl.myUserName == ds.sendBy
-                                              ? const Radius.circular(24)
-                                              : const Radius.circular(0),
+                                              ctrl.myUserName == chat.sendBy
+                                                  ? const Radius.circular(24)
+                                                  : const Radius.circular(0),
                                         ),
-                                        color: ctrl.myUserName == ds.sendBy
+                                        color: ctrl.myUserName == chat.sendBy
                                             ? Colors.blue
                                             : Colors.deepOrangeAccent,
                                       ),
                                       child: Column(
                                         crossAxisAlignment:
-                                        ctrl.myUserName == ds.sendBy
-                                            ? CrossAxisAlignment.end
-                                            : CrossAxisAlignment.start,
+                                            ctrl.myUserName == chat.sendBy
+                                                ? CrossAxisAlignment.end
+                                                : CrossAxisAlignment.start,
                                         children: [
-                                        Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          Flexible(
-                                            child: Padding(
-                                              padding:
-                                              const EdgeInsets.only(
-                                                  bottom: 2,
-                                                  top: 8,
-                                                  left: 12,
-                                                  right: 12),
-                                              child: Text(
-                                                ds.message,
-                                                style: const TextStyle(
-                                                    color: Colors.white),
-                                                softWrap: true,
+                                          Row(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              Flexible(
+                                                child: Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          bottom: 2,
+                                                          top: 8,
+                                                          left: 12,
+                                                          right: 12),
+                                                  child: Text(
+                                                    chat.message,
+                                                    style: const TextStyle(
+                                                        color: Colors.white),
+                                                    softWrap: true,
+                                                  ),
+                                                ),
                                               ),
-                                            ),
+                                            ],
                                           ),
-                                        ],
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 7.0),
-                                        child: Text(
-                                          ctrl
-                                              .msgTimeFormat(
-                                              ds.ts),
-                                              textAlign: ctrl.myUserName ==
-                                                  ds.sendBy
-                                                  ? TextAlign.end
-                                                  : TextAlign.start),
-                                        ),
+                                          Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 7.0),
+                                            child: Text(
+                                                ctrl.msgTimeFormat(chat.ts),
+                                                textAlign: ctrl.myUserName ==
+                                                        chat.sendBy
+                                                    ? TextAlign.end
+                                                    : TextAlign.start),
+                                          ),
                                         ],
                                       )),
                                 ),
@@ -176,37 +174,36 @@ class ChatScreen extends StatelessWidget {
                   child: Column(
                     children: [
                       Obx(
-                            () =>
-                        (ctrl.isDelete.value)
+                        () => (ctrl.isDelete.value)
                             ? Container(
-                          width: double.infinity,
-                          color: Colors.white,
-                          child: Row(
-                            mainAxisAlignment:
-                            MainAxisAlignment.spaceBetween,
-                            children: [
-                              const Text('Delete this message ? '),
-                              TextButton(
-                                  onPressed: () => ctrl.onDeleteMsg(),
-                                  child: const Text("Delete"))
-                            ],
-                          ),
-                        )
+                                width: double.infinity,
+                                color: Colors.white,
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    const Text('Delete this message ? '),
+                                    TextButton(
+                                        onPressed: () => ctrl.onDeleteMsg(),
+                                        child: const Text("Delete"))
+                                  ],
+                                ),
+                              )
                             : Container(),
                       ),
                       Row(
                         children: [
                           Expanded(
                               child: TextField(
-                                controller: ctrl.msgController,
-                                onTap: () => ctrl.whenTyping(),
-                                style: const TextStyle(color: Colors.white),
-                                decoration: InputDecoration(
-                                    border: InputBorder.none,
-                                    hintText: "type a message",
-                                    hintStyle: TextStyle(
-                                        color: Colors.white.withOpacity(0.6))),
-                              )),
+                            controller: ctrl.msgController,
+                            onTap: () => ctrl.whenTyping(),
+                            style: const TextStyle(color: Colors.white),
+                            decoration: InputDecoration(
+                                border: InputBorder.none,
+                                hintText: "type a message",
+                                hintStyle: TextStyle(
+                                    color: Colors.white.withOpacity(0.6))),
+                          )),
                           Padding(
                             padding: const EdgeInsets.only(right: 8.0),
                             child: GestureDetector(
